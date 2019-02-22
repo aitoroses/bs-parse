@@ -2,10 +2,9 @@
 'use strict';
 
 var List = require("bs-platform/lib/js/list.js");
-var Block = require("bs-platform/lib/js/block.js");
+var $$Array = require("bs-platform/lib/js/array.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var $$String = require("bs-platform/lib/js/string.js");
-var Pervasives = require("bs-platform/lib/js/pervasives.js");
 var Caml_string = require("bs-platform/lib/js/caml_string.js");
 
 function explode(str) {
@@ -53,331 +52,131 @@ function take(n, list) {
   }
 }
 
-function run_parser(parser, input) {
-  return Curry._1(parser, /* record */[
-              /* input */explode(input),
-              /* line */0,
-              /* column */0
-            ]);
-}
-
-var Parser = /* module */[/* run_parser */run_parser];
-
-function $$char($$char$1, state) {
-  var match = state[/* input */0];
-  var exit = 0;
-  if (match) {
-    var next_input = match[1];
-    var ch = match[0];
-    if ($$char$1 === ch) {
-      return /* Ok */Block.__(0, [/* tuple */[
-                  $$char$1,
-                  /* record */[
-                    /* input */next_input,
-                    /* line */state[/* line */1],
-                    /* column */state[/* column */2] + 1 | 0
-                  ]
-                ]]);
-    } else if (next_input) {
-      exit = 1;
-    } else {
-      return /* Err */Block.__(1, [/* tuple */[
-                  "Expecting " + (char_to_string($$char$1) + (", but got " + char_to_string(ch))),
-                  state
-                ]]);
-    }
-  } else {
-    exit = 1;
-  }
-  if (exit === 1) {
-    return /* Err */Block.__(1, [/* tuple */[
-                "Couldn't find character " + char_to_string($$char$1),
-                state
-              ]]);
-  }
-  
-}
-
-function map(fn, parser, state) {
-  var match = Curry._1(parser, state);
-  if (match.tag) {
-    return /* Err */Block.__(1, [match[0]]);
-  } else {
-    var match$1 = match[0];
-    return /* Ok */Block.__(0, [/* tuple */[
-                Curry._1(fn, match$1[0]),
-                match$1[1]
-              ]]);
-  }
-}
-
-function andThen(parserA, parserB, state) {
-  var match = Curry._1(parserA, state);
-  if (match.tag) {
-    return /* Err */Block.__(1, [match[0]]);
-  } else {
-    var match$1 = match[0];
-    var match$2 = Curry._1(parserB, match$1[1]);
-    if (match$2.tag) {
-      return /* Err */Block.__(1, [match$2[0]]);
-    } else {
-      var match$3 = match$2[0];
-      return /* Ok */Block.__(0, [/* tuple */[
-                  /* tuple */[
-                    match$1[0],
-                    match$3[0]
-                  ],
-                  match$3[1]
-                ]]);
-    }
-  }
-}
-
-function map2(fn, p1, p2) {
-  return (function (param) {
-      return map((function (param) {
-                    return Curry._2(fn, param[0], param[1]);
-                  }), (function (param) {
-                    return andThen(p1, p2, param);
-                  }), param);
+function DerivedParsers(P) {
+  return (function (PS) {
+      var Parsers = Curry._1(PS, P);
+      var map = function (parser, fn) {
+        return Curry._2(Parsers[/* flatMap */3], parser, (function (v) {
+                      return Curry._1(Parsers[/* unit */4], Curry._1(fn, v));
+                    }));
+      };
+      var map2 = function (parser1, parser2, fn) {
+        return Curry._2(Parsers[/* flatMap */3], parser1, (function (v1) {
+                      return map(parser2, (function (v2) {
+                                    return Curry._2(fn, v1, v2);
+                                  }));
+                    }));
+      };
+      var product = function (parser1, parser2) {
+        return map2(parser1, parser2, (function (v1, v2) {
+                      return /* tuple */[
+                              v1,
+                              v2
+                            ];
+                    }));
+      };
+      var $$char = function (c) {
+        return map(Curry._1(Parsers[/* string */1], char_to_string(c)), (function (s) {
+                      return Caml_string.get(s, 0);
+                    }));
+      };
+      return /* module */[
+              /* Parsers */Parsers,
+              /* map */map,
+              /* map2 */map2,
+              /* product */product,
+              /* char */$$char
+            ];
     });
 }
 
-function orElse(parserA, parserB, state) {
-  var match = Curry._1(parserA, state);
-  if (match.tag) {
-    var match$1 = Curry._1(parserB, state);
-    if (match$1.tag) {
-      return /* Err */Block.__(1, [/* tuple */[
-                  match[0][0] + ("\n" + match$1[0][0]),
-                  state
-                ]]);
-    } else {
-      var match$2 = match$1[0];
-      return /* Ok */Block.__(0, [/* tuple */[
-                  match$2[0],
-                  match$2[1]
-                ]]);
-    }
-  } else {
-    var match$3 = match[0];
-    return /* Ok */Block.__(0, [/* tuple */[
-                match$3[0],
-                match$3[1]
-              ]]);
-  }
-}
-
-function empty(s) {
-  return /* Ok */Block.__(0, [/* tuple */[
-              "",
-              s
-            ]]);
-}
-
-function reduce(combine, list) {
-  return List.fold_left(combine, empty, list);
-}
-
-function choice(param) {
-  return List.fold_left(orElse, empty, param);
-}
-
-function anyOf(list_of_chars) {
-  var list = List.map($$char, list_of_chars);
-  return List.fold_left(orElse, empty, list);
-}
-
-function $less$$great(x, f) {
-  return (function (param) {
-      return map(f, x, param);
+function ParserInfix(P) {
+  return (function (PS) {
+      var Parsers = Curry._1(PS, P);
+      var Parsers$1 = Curry._1(PS, P);
+      var map = function (parser, fn) {
+        return Curry._2(Parsers$1[/* flatMap */3], parser, (function (v) {
+                      return Curry._1(Parsers$1[/* unit */4], Curry._1(fn, v));
+                    }));
+      };
+      var map2 = function (parser1, parser2, fn) {
+        return Curry._2(Parsers$1[/* flatMap */3], parser1, (function (v1) {
+                      return map(parser2, (function (v2) {
+                                    return Curry._2(fn, v1, v2);
+                                  }));
+                    }));
+      };
+      var product = function (parser1, parser2) {
+        return map2(parser1, parser2, (function (v1, v2) {
+                      return /* tuple */[
+                              v1,
+                              v2
+                            ];
+                    }));
+      };
+      var $$char = function (c) {
+        return map(Curry._1(Parsers$1[/* string */1], char_to_string(c)), (function (s) {
+                      return Caml_string.get(s, 0);
+                    }));
+      };
+      var DP = /* module */[
+        /* Parsers */Parsers$1,
+        /* map */map,
+        /* map2 */map2,
+        /* product */product,
+        /* char */$$char
+      ];
+      var $great$great$eq = Parsers[/* flatMap */3];
+      var $less$pipe$great = Parsers[/* orElse */2];
+      return /* module */[
+              /* Parsers */Parsers,
+              /* DP */DP,
+              /* >>= */$great$great$eq,
+              /* <$> */map,
+              /* >> */product,
+              /* <|> */$less$pipe$great
+            ];
     });
 }
 
-function string(str) {
-  var list = List.map((function (param, param$1) {
-          return map(char_to_string, param, param$1);
-        }), List.map($$char, explode(str)));
-  return List.fold_left((function (p1, p2) {
-                return (function (param) {
-                    return map((function (param) {
-                                  return param[0] + param[1];
-                                }), (function (param) {
-                                  return andThen(p1, p2, param);
-                                }), param);
-                  });
-              }), empty, list);
+function make(input, offset) {
+  return /* record */[
+          /* input */input,
+          /* offset */offset
+        ];
 }
 
-function listOfN(n, parser, state) {
-  var _n = n;
-  var parser$1 = parser;
-  var _state = state;
-  var _list = /* [] */0;
-  while(true) {
-    var list = _list;
-    var state$1 = _state;
-    var n$1 = _n;
-    if (n$1 === 0) {
-      return /* Ok */Block.__(0, [/* tuple */[
-                  list,
-                  state$1
-                ]]);
-    } else {
-      var match = Curry._1(parser$1, state$1);
-      if (match.tag) {
-        var match$1 = match[0];
-        return /* Err */Block.__(1, [/* tuple */[
-                    match$1[0],
-                    match$1[1]
-                  ]]);
-      } else {
-        var match$2 = match[0];
-        _list = Pervasives.$at(list, /* :: */[
-              match$2[0],
-              /* [] */0
-            ]);
-        _state = match$2[1];
-        _n = n$1 - 1 | 0;
-        continue ;
-      }
-    }
+function line(loc) {
+  var countBreaks = function (str) {
+    return List.fold_left((function (acc, v) {
+                  if (v === /* "\n" */10) {
+                    return acc + 1 | 0;
+                  } else {
+                    return acc;
+                  }
+                }), 0, explode(str));
   };
+  return countBreaks($$String.sub(loc[/* input */0], 0, loc[/* offset */1] + 1 | 0)) + 1 | 0;
 }
 
-function succeed(a) {
-  var partial_arg = string("");
-  return (function (param) {
-      return map((function () {
-                    return a;
-                  }), partial_arg, param);
-    });
+function col(loc) {
+  return $$Array.of_list(List.rev(explode($$String.sub(loc[/* input */0], 0, loc[/* offset */1] + 1 | 0)))).indexOf(/* "\n" */10);
 }
 
-function many(parser, state) {
-  var parser$1 = parser;
-  var _state = state;
-  var _list = /* [] */0;
-  while(true) {
-    var list = _list;
-    var state$1 = _state;
-    var match = Curry._1(parser$1, state$1);
-    if (match.tag) {
-      return /* Ok */Block.__(0, [/* tuple */[
-                  list,
-                  state$1
-                ]]);
-    } else {
-      var match$1 = match[0];
-      _list = Pervasives.$at(list, /* :: */[
-            match$1[0],
-            /* [] */0
-          ]);
-      _state = match$1[1];
-      continue ;
-    }
-  };
-}
-
-function many1(parser) {
-  return (function (param) {
-      return map((function (param) {
-                    return Pervasives.$at(/* :: */[
-                                param[0],
-                                /* [] */0
-                              ], param[1]);
-                  }), (function (param) {
-                    return andThen(parser, (function (param) {
-                                  return many(parser, param);
-                                }), param);
-                  }), param);
-    });
-}
-
-function slice(parser, state) {
-  var match = Curry._1(parser, state);
-  if (match.tag) {
-    var match$1 = match[0];
-    return /* Err */Block.__(1, [/* tuple */[
-                match$1[0],
-                match$1[1]
-              ]]);
-  } else {
-    var nextState = match[0][1];
-    var diff_length = List.length(state[/* input */0]) - List.length(nextState[/* input */0]) | 0;
-    var slice$1 = char_list_to_string(take(diff_length, state[/* input */0]));
-    return /* Ok */Block.__(0, [/* tuple */[
-                slice$1,
-                nextState
-              ]]);
-  }
-}
-
-var Parsers = /* module */[
-  /* char */$$char,
-  /* map */map,
-  /* andThen */andThen,
-  /* map2 */map2,
-  /* orElse */orElse,
-  /* empty */empty,
-  /* reduce */reduce,
-  /* choice */choice,
-  /* anyOf */anyOf,
-  /* <$> */$less$$great,
-  /* >> */andThen,
-  /* <|> */orElse,
-  /* string */string,
-  /* listOfN */listOfN,
-  /* succeed */succeed,
-  /* many */many,
-  /* many1 */many1,
-  /* slice */slice
+var Location = /* module */[
+  /* make */make,
+  /* line */line,
+  /* col */col
 ];
 
 var $$JSON = /* module */[];
-
-function line_break(param) {
-  return $$char(/* "\n" */10, param);
-}
-
-function open_paren(param) {
-  return $$char(/* "(" */40, param);
-}
-
-function close_paren(param) {
-  return $$char(/* ")" */41, param);
-}
-
-var Scheme = /* module */[
-  /* line_break */line_break,
-  /* open_paren */open_paren,
-  /* close_paren */close_paren
-];
-
-function parser(param) {
-  return slice((function (param) {
-                return andThen((function (param) {
-                              return many((function (param) {
-                                            return $$char(/* "a" */97, param);
-                                          }), param);
-                            }), (function (param) {
-                              return $$char(/* "b" */98, param);
-                            }), param);
-              }), param);
-}
-
-var result = run_parser(parser, "aaabcasd");
-
-console.log(result[0]);
 
 exports.explode = explode;
 exports.char_to_string = char_to_string;
 exports.char_list_to_string = char_list_to_string;
 exports.take = take;
-exports.Parser = Parser;
-exports.Parsers = Parsers;
+exports.DerivedParsers = DerivedParsers;
+exports.ParserInfix = ParserInfix;
+exports.Location = Location;
 exports.$$JSON = $$JSON;
-exports.Scheme = Scheme;
-exports.parser = parser;
-exports.result = result;
-/* result Not a pure module */
+/* No side effect */

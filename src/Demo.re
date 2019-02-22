@@ -1,67 +1,4 @@
-/*type token =
-  | OpenParen
-  | CloseParen
-  | Number(string)
-  | String(string)
-  | Identifier(string);
 
-let explode = str => {
-  let rec exp = i => list =>
-    if (i < 0) {
-      list
-    } else {
-      exp(i - 1, [str.[i], ...list])
-    };
-  exp(String.length(str) - 1, [])
-};
-
-exception NoValidToken(string)
-
-let str_of_char = c => String.make(1, c)
-
-let tokenizer = input => {
-  let rec tok = input => current => tokens => 
-    switch (input) {
-    | [] => List.rev(tokens)
-    | [head, ...tail] =>
-      let next = tok(tail); /* partial application */
-      switch (head, current, tokens) {
-      /* State: None */
-      | ('(', None, t) => next(None, [OpenParen, ...t])
-      | (')', None, t) => next(None, [CloseParen, ...t])
-      | (' ' | '\t' | '\r' | '\n', None, t) => next(None, t)
-      | ('"', None, t) => next(Some(String("")), t)
-      | ('0'..'9' as i, None, t) => next(Some(Number(str_of_char(i))), t)
-      | ('a'..'z' as i, None, t) => next(Some(Identifier(str_of_char(i))), t)
-      /* State: String */
-      | ('"', Some(String(s)), t) => next(None, [String(s), ...t])
-      | (i, Some(String(s)), t) => next(Some(String(s ++ str_of_char(i))), t)
-      /* State: Number */
-      | ('0'..'9' as i, Some(Number(n)), t) => next(Some(Number(n ++ str_of_char(i))), t)
-      | (')', Some(Number(n)), t) => next(None, [CloseParen, Number(n), ...t])
-      | (' ', Some(Number(n)), t) => next(None, [Number(n), ...t])
-      /* State: Identifier */
-      | ('a'..'z' as i, Some(Identifier(n)), t) => next(Some(Identifier(n ++ str_of_char(i))), t)
-      | (')', Some(Identifier(i)), t) => next(None, [CloseParen, Identifier(i), ...t])
-      | (' ', Some(Identifier(i)), t) => next(None, [Identifier(i), ...t])
-      | (c, _, _) => raise(NoValidToken(String.make(1, c)))
-      }
-    };
-  tok(explode(input), None, [])
-};
-
-Js.log(tokenizer("(def a 1)"))
-*/
-
-/*module type Monoid = {
-  type t
-  let empty: t
-  let concat: (t, t) => t
-};
-
-module Reduce = (M: Monoid) => {
-  let reduce = (fn, list) => List.fold_left(M.concat, M.empty, list)
-}*/
 
 type result('a, 'b) =
   | Ok('a)
@@ -87,7 +24,87 @@ let rec take = (n, list) =>
   | [x, ...xs] => n == 0 ? [] : [x, ...take(n - 1, xs)]
   };
 
-module Parser = {
+module type Parser = {
+  type parser('a)
+  type parse_error
+};
+
+module type Parsers = (P: Parser) => {
+  type parser('a) = P.parser('a);
+  type parse_error = P.parse_error;
+  let run: parser('a) => string => result('a, parse_error)
+  let string: string => parser(string)
+  let orElse: (parser('a), parser('a)) => parser('a)
+  let flatMap: parser('a) => ('a => parser('b)) => parser('b)
+  let unit: 'a => parser('a)
+  let listOfN: int => parser('a) => parser(list('a))
+  let many: parser('a) => parser(list('a))
+  let many1: parser('a) => parser(list('a))
+  let slice: parser('a) => parser(string)
+  let regex: Js.Re.t => parser(string)
+};
+
+module DerivedParsers = (P: Parser, PS: Parsers) => {
+  module Parsers = PS(P);
+  open Parsers;
+
+  let map = parser => fn => flatMap(parser, v => unit(fn(v)))
+
+  let map2 = (parser1, parser2) => fn =>
+    flatMap(parser1, v1 => 
+      map(parser2, v2 => fn(v1, v2)))
+
+  let product = (parser1, parser2) => map2(parser1, parser2, (v1, v2) => (v1, v2))
+
+  let char = c => (char_to_string(c) |> string) |. map(s => s.[0])
+};
+
+module ParserInfix = (P: Parser, PS: Parsers) => {
+  module Parsers = PS(P);
+  module DP = DerivedParsers(P, PS)
+  open Parsers;
+  open DP;
+
+  let (>>=) = flatMap
+  let (<$>) = map
+  let (>>) = product
+  let (<|>) = orElse
+}
+
+module Location = {
+  type t = {
+    input: string,
+    offset: int
+  }
+  let make = (input, offset) => { input, offset }
+  let line = loc => {
+    let countBreaks = str => List.fold_left((acc, v) => {
+      if (v == '\n') {
+        acc + 1
+      } else {
+        acc
+      }
+    }, 0, explode(str));
+    countBreaks(String.sub(loc.input, 0, loc.offset+1)) + 1
+  }
+
+  let col = loc => 
+    String.sub(loc.input, 0, loc.offset+1) 
+    |> explode 
+    |> List.rev 
+    |> Array.of_list
+    |> Js.Array.indexOf('\n')
+}
+
+module type ErrorReporting = (P: Parser) => {
+  type parser('a) = P.parser('a);
+  type parse_error = P.parse_error;
+  let errorLocation: parse_error => Location.t
+  let errorMessage: parse_error => string
+}
+
+
+/*module Parser = {
 
   type state = {
     input: list(char),
@@ -117,24 +134,24 @@ module Parsers = {
     }
   };
 
-  let map: ('a => 'b) => Parser.t('a) => Parser.t('b) = fn => parser => state => {
+  let flatMap: Parser.t('a) => ('a => Parser.t('b)) => Parser.t('b) = parser => fn => state =>
     switch(parser(state)) {
-    | Ok((value, state)) => Ok((fn(value), state))
-    | Err(e) => Err(e)
-    }
-  };
-
-  let andThen: Parser.t('a) => Parser.t('b) => Parser.t(('a, 'b)) = parserA => parserB => state =>
-    switch (parserA(state)) {
-    | Ok((valueA, state)) =>
-      switch (parserB(state)) {
-      | Ok((valueB, state)) => Ok(((valueA, valueB), state))
-      | Err(e) => Err(e)
-      }
-    | Err(e) => Err(e)  
+    | Ok((v, state)) => fn(v, state)
+    | Err((m, state)) => Err((m, state))
     }
 
-  let map2 = fn => (p1, p2) => map(((v1, v2)) => fn(v1, v2), andThen(p1, p2))
+  let (>>=) = flatMap
+  
+  let unit: 'a => Parser.t('a) = value => state => Ok((value, state))
+
+  let map = parser => fn => flatMap(parser, v => unit(fn(v)))
+  let (<$>) = map
+
+  let map2 = (p1, p2) => fn =>
+    p1 >>= v1 =>
+    p2 <$> v2 => fn(v1, v2)
+
+  let product = (p1, p2) => map2(p1, p2, (v1, v2) => (v1, v2))
 
   let orElse: Parser.t('a) => Parser.t('a) => Parser.t('a) = parserA => parserB => state =>
     switch (parserA(state)) {
@@ -157,16 +174,15 @@ module Parsers = {
     |> List.map(char)
     |> choice
 
-  let (<$>) = (x, f) => map(f, x)
-  let (>>) = andThen
+  let (>>) = product
   let (<|>) = orElse
 
   let string = str => {
     explode(str)
     |> List.map(char)
-    |> List.map(map(char_to_string))
+    |> List.map(x => map(x, char_to_string))
     |> reduce((p1, p2) =>
-      andThen(p1, p2) <$> ((a, b)) => a ++ b
+      product(p1, p2) <$> ((a, b)) => a ++ b
     )
   }
 
@@ -184,7 +200,7 @@ module Parsers = {
     lofn(n, parser, state, [])
   }
 
-  let succeed = a => string("") <$> _ => a
+  let succeed = unit
 
   let many: Parser.t('a) => Parser.t(list('a)) = parser => state => {
     let rec mny = (parser, state, list) => {
@@ -196,8 +212,8 @@ module Parsers = {
     mny(parser, state, [])
   };
 
-  let many1: Parser.t('a) => Parser.t(list('a)) = parser =>
-    andThen(parser, many(parser)) <$> ((first, results)) => [first] @ results
+  let many1 = parser =>
+    map2(parser, many(parser), (first, results) => [first] @ results)
 
   let slice: Parser.t('a) => Parser.t(string) = parser => state => {
     switch (parser(state)) {
@@ -209,27 +225,24 @@ module Parsers = {
       | Err((m, state)) => Err((m, state))
       }
   }
-};
+
+  let regex: Js.Re.t => Parser.t(string) = regex => state => {
+    let input_string = char_list_to_string(state.input);
+    let executed = Js.Re.exec(input_string, regex);
+    let matched = Belt_Option.flatMap(executed, result => Js.Re.captures(result)[1] |> Js.Nullable.toOption);
+    /* TODO: Fix state */
+    switch(matched) {
+    | Some(result) => Ok((result, state))
+    | _ => Err(("Couldn't match regex" ++ (regex |> Obj.magic), state))
+    }
+  } 
+};*/
 
 module JSON = {
   
 };
 
-
-module Scheme = {
-
-  type token =
-    | OpenParen
-
-  open Parsers;
-
-  let line_break = char('\n')
-
-  let open_paren = char('(')
-  let close_paren = char(')')
-
-};
-
+/*
 open Parser;
 open Parsers;
 
@@ -240,7 +253,7 @@ let result = run_parser(parser, "aaabcasd");
 switch(result) {
 | Ok((v)) => Js.log(v)
 | Err((m)) => Js.log(m)
-}
+}*/
 
 
 
