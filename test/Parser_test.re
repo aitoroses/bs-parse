@@ -158,7 +158,7 @@ describe("Parsers", () => {
       let trueBool = string("true") <$> _ => True
       let falseBool = string("false") <$> _ => False
 
-      let parser = JSON.Parser.surround(JSON.Parser.whitespace, orElse(trueBool, falseBool), JSON.Parser.whitespace)
+      let parser = JSON.surround(JSON.whitespace, orElse(trueBool, falseBool), JSON.whitespace)
 
       let list = {|true, false, true , false|}
       let result = run(sepBy(",", parser), list)

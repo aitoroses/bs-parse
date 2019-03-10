@@ -96,23 +96,19 @@ var array = arrayP(tag$2 === 250 ? expr[0] : (
         tag$2 === 246 ? CamlinternalLazy.force_lazy_block(expr) : expr
       ));
 
-var Parser = /* module */[
-  /* undefined */$$undefined,
-  /* null */$$null,
-  /* trueBool */trueBool,
-  /* falseBool */falseBool,
-  /* bools */bools,
-  /* quotedString */quotedString,
-  /* number */number,
-  /* literal */literal,
-  /* objectMemberP */objectMemberP,
-  /* objP */objP,
-  /* arrayP */arrayP,
-  /* expr */expr,
-  /* objectMember */objectMember,
-  /* obj */obj,
-  /* array */array
-];
-
-exports.Parser = Parser;
+exports.$$undefined = $$undefined;
+exports.$$null = $$null;
+exports.trueBool = trueBool;
+exports.falseBool = falseBool;
+exports.bools = bools;
+exports.quotedString = quotedString;
+exports.number = number;
+exports.literal = literal;
+exports.objectMemberP = objectMemberP;
+exports.objP = objP;
+exports.arrayP = arrayP;
+exports.expr = expr;
+exports.objectMember = objectMember;
+exports.obj = obj;
+exports.array = array;
 /* undefined Not a pure module */
