@@ -3,6 +3,7 @@
 
 var Curry = require("bs-platform/lib/js/curry.js");
 var Caml_string = require("bs-platform/lib/js/caml_string.js");
+var CamlinternalLazy = require("bs-platform/lib/js/camlinternalLazy.js");
 var Util$ReasonSuperTinyCompiler = require("./Util.bs.js");
 
 function DerivedParsers(PS) {
@@ -13,13 +14,19 @@ function DerivedParsers(PS) {
   };
   var map2 = function (parser1, parser2, fn) {
     return Curry._2(PS[/* flatMap */5], parser1, (function (v1) {
-                  return map(parser2, (function (v2) {
+                  var tag = parser2.tag | 0;
+                  return map(tag === 250 ? parser2[0] : (
+                                tag === 246 ? CamlinternalLazy.force_lazy_block(parser2) : parser2
+                              ), (function (v2) {
                                 return Curry._2(fn, v1, v2);
                               }));
                 }));
   };
   var product = function (parser1, parser2) {
-    return map2(parser1, parser2, (function (v1, v2) {
+    var tag = parser2.tag | 0;
+    return map2(parser1, tag === 250 ? parser2[0] : (
+                  tag === 246 ? CamlinternalLazy.force_lazy_block(parser2) : parser2
+                ), (function (v1, v2) {
                   return /* tuple */[
                           v1,
                           v2
@@ -47,13 +54,19 @@ function InfixOps(PS) {
   };
   var map2 = function (parser1, parser2, fn) {
     return Curry._2(PS[/* flatMap */5], parser1, (function (v1) {
-                  return map(parser2, (function (v2) {
+                  var tag = parser2.tag | 0;
+                  return map(tag === 250 ? parser2[0] : (
+                                tag === 246 ? CamlinternalLazy.force_lazy_block(parser2) : parser2
+                              ), (function (v2) {
                                 return Curry._2(fn, v1, v2);
                               }));
                 }));
   };
   var product = function (parser1, parser2) {
-    return map2(parser1, parser2, (function (v1, v2) {
+    var tag = parser2.tag | 0;
+    return map2(parser1, tag === 250 ? parser2[0] : (
+                  tag === 246 ? CamlinternalLazy.force_lazy_block(parser2) : parser2
+                ), (function (v1, v2) {
                   return /* tuple */[
                           v1,
                           v2
