@@ -28,8 +28,8 @@ module Parser = {
         }
     let objP = expr => surround(string("{"), sepBy(",")(objectMemberP(expr) |> spaceAround), string("}")) <$> res => JObject(res)
     let arrayP = expr => surround(string("["), sepBy(",")(expr |> spaceAround), string("]")) <$> res => JArray(res)
-    let rec expr = () => literal <|> lazy objP(expr()) <|> lazy arrayP(expr())
-    let objectMember = objectMemberP(expr())
-    let obj = objP(expr())
-    let array = arrayP(expr())
+    let rec expr = lazy (literal <|> lazy objP(Lazy.force(expr)) <|> lazy arrayP(Lazy.force(expr)))
+    let objectMember = objectMemberP(Lazy.force(expr))
+    let obj = objP(Lazy.force(expr))
+    let array = arrayP(Lazy.force(expr))
 }

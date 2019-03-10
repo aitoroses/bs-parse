@@ -3,8 +3,10 @@
 
 var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
+var Caml_obj = require("bs-platform/lib/js/caml_obj.js");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Caml_format = require("bs-platform/lib/js/caml_format.js");
+var CamlinternalLazy = require("bs-platform/lib/js/camlinternalLazy.js");
 var Combinators$ReasonSuperTinyCompiler = require("./Combinators.bs.js");
 var CommonCombinators$ReasonSuperTinyCompiler = require("./CommonCombinators.bs.js");
 
@@ -60,19 +62,39 @@ function arrayP(expr) {
               }));
 }
 
-function expr(param) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, literal, Block.__(246, [(function (param) {
-                        return objP(expr(/* () */0));
-                      })])), Block.__(246, [(function (param) {
-                    return arrayP(expr(/* () */0));
-                  })]));
-}
+var expr = [];
 
-var objectMember = objectMemberP(expr(/* () */0));
+Caml_obj.caml_update_dummy(expr, Block.__(246, [(function (param) {
+            return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, literal, Block.__(246, [(function (param) {
+                                  var tag = expr.tag | 0;
+                                  return objP(tag === 250 ? expr[0] : (
+                                                tag === 246 ? CamlinternalLazy.force_lazy_block(expr) : expr
+                                              ));
+                                })])), Block.__(246, [(function (param) {
+                              var tag = expr.tag | 0;
+                              return arrayP(tag === 250 ? expr[0] : (
+                                            tag === 246 ? CamlinternalLazy.force_lazy_block(expr) : expr
+                                          ));
+                            })]));
+          })]));
 
-var obj = objP(expr(/* () */0));
+var tag = expr.tag | 0;
 
-var array = arrayP(expr(/* () */0));
+var objectMember = objectMemberP(tag === 250 ? expr[0] : (
+        tag === 246 ? CamlinternalLazy.force_lazy_block(expr) : expr
+      ));
+
+var tag$1 = expr.tag | 0;
+
+var obj = objP(tag$1 === 250 ? expr[0] : (
+        tag$1 === 246 ? CamlinternalLazy.force_lazy_block(expr) : expr
+      ));
+
+var tag$2 = expr.tag | 0;
+
+var array = arrayP(tag$2 === 250 ? expr[0] : (
+        tag$2 === 246 ? CamlinternalLazy.force_lazy_block(expr) : expr
+      ));
 
 var Parser = /* module */[
   /* undefined */$$undefined,
