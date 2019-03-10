@@ -39,7 +39,7 @@ module DerivedParsers = (PS: Parsers) => {
     flatMap(parser1, v1 => 
       map(Lazy.force(parser2), v2 => fn(v1, v2)))
 
-  let product = (parser1, parser2) => map2(parser1, Lazy.force(parser2), (v1, v2) => (v1, v2))
+  let product = (parser1, parser2) => map2(parser1, parser2, (v1, v2) => (v1, v2))
 
   let char = c => char_to_string(c) |> string |. map(s => s.[0])
 };

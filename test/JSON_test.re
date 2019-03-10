@@ -2,21 +2,9 @@ open Jest;
 open Expect;
 open! Expect.Operators;
 open Combinators;
+open CommonCombinators;
 
 describe("JSON parser", () => {
-
-    test("surround", () => {
-        let surround = openP => bodyP => closeP => 
-            openP >>= _ =>
-            JSON.Parser.whitespace >>= _ =>
-            bodyP >>= result =>
-            JSON.Parser.whitespace >>= _ =>
-            closeP <$> _ => result
-
-        let json = {|[     a  ]|}
-        let result = run(surround(string("["), string("a"), string("]")), json)
-        expect(result |> get_exn) == "a"
-    })
 
     test("null", () => {
         let json = {|null|}
@@ -36,7 +24,7 @@ describe("JSON parser", () => {
     test("string", () => {
         let json = {| "what"|}
 
-        let result = run(JSON.Parser.whitespace >>= _ => JSON.Parser.quotedString, json)
+        let result = run(whitespace >>= _ => JSON.Parser.quotedString, json)
         expect(result |> get_exn) == JSON.JString("what")
     })
 

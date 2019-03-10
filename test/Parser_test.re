@@ -120,8 +120,9 @@ describe("Parsers", () => {
       expect(result |> get_exn) == [|"abr", "b"|]
     })
 
-    test("continuation", () => {  
-      let p = regex("a(b)c?ra?") >> string("c")
+    test("continuation", () => {
+      let c = lazy string("c")
+      let p = regex("a(b)c?ra?") >> c
       let result = run(p, "abrcaaaaa");
       expect(result |> get_exn) == ([|"abr", "b"|], "c")
     })

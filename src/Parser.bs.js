@@ -23,10 +23,7 @@ function DerivedParsers(PS) {
                 }));
   };
   var product = function (parser1, parser2) {
-    var tag = parser2.tag | 0;
-    return map2(parser1, tag === 250 ? parser2[0] : (
-                  tag === 246 ? CamlinternalLazy.force_lazy_block(parser2) : parser2
-                ), (function (v1, v2) {
+    return map2(parser1, parser2, (function (v1, v2) {
                   return /* tuple */[
                           v1,
                           v2
@@ -63,10 +60,7 @@ function InfixOps(PS) {
                 }));
   };
   var product = function (parser1, parser2) {
-    var tag = parser2.tag | 0;
-    return map2(parser1, tag === 250 ? parser2[0] : (
-                  tag === 246 ? CamlinternalLazy.force_lazy_block(parser2) : parser2
-                ), (function (v1, v2) {
+    return map2(parser1, parser2, (function (v1, v2) {
                   return /* tuple */[
                           v1,
                           v2

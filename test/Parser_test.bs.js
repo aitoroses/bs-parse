@@ -106,7 +106,10 @@ Jest.describe("Parsers", (function (param) {
                                   ]);
                       }));
                 return Jest.test("continuation", (function (param) {
-                              var p = Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great, Combinators$ReasonSuperTinyCompiler.regex("a(b)c?ra?"), Combinators$ReasonSuperTinyCompiler.string("c"));
+                              var c = Block.__(246, [(function (param) {
+                                      return Combinators$ReasonSuperTinyCompiler.string("c");
+                                    })]);
+                              var p = Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great, Combinators$ReasonSuperTinyCompiler.regex("a(b)c?ra?"), c);
                               var result = Combinators$ReasonSuperTinyCompiler.run(p, "abrcaaaaa");
                               return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* tuple */[
                                           /* array */[

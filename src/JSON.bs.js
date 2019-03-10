@@ -6,10 +6,7 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Caml_format = require("bs-platform/lib/js/caml_format.js");
 var Combinators$ReasonSuperTinyCompiler = require("./Combinators.bs.js");
-
-var whitespace = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.slice(Combinators$ReasonSuperTinyCompiler.regex("[\\s]*")), (function (param) {
-        return /* () */0;
-      }));
+var CommonCombinators$ReasonSuperTinyCompiler = require("./CommonCombinators.bs.js");
 
 var $$undefined = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.string("undefined"), (function (param) {
         return /* JUndefined */0;
@@ -27,70 +24,41 @@ var falseBool = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combi
         return /* JBool */Block.__(2, [false]);
       }));
 
-var bools = Combinators$ReasonSuperTinyCompiler.orElse(trueBool, Block.__(250, [falseBool]));
+var bools = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, trueBool, Block.__(250, [falseBool]));
 
-var str = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.regex("\"([^\"]*)\""), (function (matches) {
-        return Caml_array.caml_array_get(matches, 1);
-      }));
-
-var quotedString = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, str, (function (s) {
+var quotedString = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.str, (function (s) {
         return /* JString */Block.__(1, [s]);
       }));
 
-var number = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.slice(Combinators$ReasonSuperTinyCompiler.regex("[-+]?[0-9]*\\.?[0-9]+")), (function (numberStr) {
+var number = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.number, (function (numberStr) {
         return /* JNumber */Block.__(0, [Caml_format.caml_float_of_string(numberStr)]);
       }));
 
 var literal = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, $$undefined, Block.__(250, [$$null])), Block.__(250, [bools])), Block.__(250, [quotedString])), Block.__(250, [number]));
 
-function spaceAround(bodyP) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, whitespace, (function (param) {
-                return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, bodyP, (function (result) {
-                              return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, whitespace, (function (param) {
-                                            return result;
-                                          }));
-                            }));
-              }));
-}
-
-function surround(openP, bodyP, closeP) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, openP, (function (param) {
-                return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, spaceAround(bodyP), (function (result) {
-                              return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, closeP, (function (param) {
-                                            return result;
-                                          }));
-                            }));
-              }));
-}
-
 function objectMemberP(expr) {
   return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, Combinators$ReasonSuperTinyCompiler.regex("\"([^\"]*)\"\\s*:\\s*"), (function (captured) {
-                return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, expr, (function (lit) {
+                return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, expr, (function (value) {
+                              var key = Caml_array.caml_array_get(captured, 1);
                               return /* tuple */[
-                                      Caml_array.caml_array_get(captured, 1),
-                                      lit
+                                      key,
+                                      value
                                     ];
                             }));
               }));
 }
 
 function objP(expr) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, surround(Combinators$ReasonSuperTinyCompiler.string("{"), Combinators$ReasonSuperTinyCompiler.sepBy(",", spaceAround(objectMemberP(expr))), Combinators$ReasonSuperTinyCompiler.string("}")), (function (res) {
+  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.surround(Combinators$ReasonSuperTinyCompiler.string("{"), Combinators$ReasonSuperTinyCompiler.sepBy(",", CommonCombinators$ReasonSuperTinyCompiler.spaceAround(objectMemberP(expr))), Combinators$ReasonSuperTinyCompiler.string("}")), (function (res) {
                 return /* JObject */Block.__(4, [res]);
               }));
 }
 
 function arrayP(expr) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, surround(Combinators$ReasonSuperTinyCompiler.string("["), Combinators$ReasonSuperTinyCompiler.sepBy(",", spaceAround(expr)), Combinators$ReasonSuperTinyCompiler.string("]")), (function (res) {
+  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.surround(Combinators$ReasonSuperTinyCompiler.string("["), Combinators$ReasonSuperTinyCompiler.sepBy(",", CommonCombinators$ReasonSuperTinyCompiler.spaceAround(expr)), Combinators$ReasonSuperTinyCompiler.string("]")), (function (res) {
                 return /* JArray */Block.__(3, [res]);
               }));
 }
-
-var RecursiveParsers = /* module */[
-  /* objectMemberP */objectMemberP,
-  /* objP */objP,
-  /* arrayP */arrayP
-];
 
 function expr(param) {
   return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, literal, Block.__(246, [(function (param) {
@@ -107,19 +75,17 @@ var obj = objP(expr(/* () */0));
 var array = arrayP(expr(/* () */0));
 
 var Parser = /* module */[
-  /* whitespace */whitespace,
   /* undefined */$$undefined,
   /* null */$$null,
   /* trueBool */trueBool,
   /* falseBool */falseBool,
   /* bools */bools,
-  /* str */str,
   /* quotedString */quotedString,
   /* number */number,
   /* literal */literal,
-  /* spaceAround */spaceAround,
-  /* surround */surround,
-  /* RecursiveParsers */RecursiveParsers,
+  /* objectMemberP */objectMemberP,
+  /* objP */objP,
+  /* arrayP */arrayP,
   /* expr */expr,
   /* objectMember */objectMember,
   /* obj */obj,
@@ -127,4 +93,4 @@ var Parser = /* module */[
 ];
 
 exports.Parser = Parser;
-/* whitespace Not a pure module */
+/* undefined Not a pure module */
