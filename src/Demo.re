@@ -1,9 +1,9 @@
 
-open Parser.Parsers;
+// open Parser.Parsers;
 
-let parser = orElse(string("abra"), string("cadabra"))
+// let parser = orElse(string("abra"), string("cadabra"))
 
-switch(run(parser, "cadabra")) {
+/*switch(run(parser, "cadabra")) {
 | Ok((result, loc)) =>
     Js.log({
         "success": true,
@@ -16,4 +16,4 @@ switch(run(parser, "cadabra")) {
         "success": false,
         "error": Parser.ParseError.toString(e),
     })
-}
+}*/

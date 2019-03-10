@@ -3,102 +3,142 @@
 
 var Jest = require("@glennsl/bs-jest/src/jest.js");
 var Curry = require("bs-platform/lib/js/curry.js");
-var Parser$ReasonSuperTinyCompiler = require("../src/Parser.bs.js");
+var ParseError$ReasonSuperTinyCompiler = require("../src/ParseError.bs.js");
+var Combinators$ReasonSuperTinyCompiler = require("../src/Combinators.bs.js");
 
 Jest.describe("Parsers", (function (param) {
         Jest.describe("errors", (function (param) {
                 return Jest.test("should be nice", (function (param) {
-                              var error = Parser$ReasonSuperTinyCompiler.ParseError[/* toString */4](Parser$ReasonSuperTinyCompiler.Parsers[/* get_error */5](Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](Parser$ReasonSuperTinyCompiler.Parsers[/* string */6]("abx"), "abra")));
-                              return Curry._2(Jest.Expect[/* Operators */25][/* == */0], Jest.Expect[/* expect */0](error), "Expected: abx at line 1, column 1");
+                              var error = Combinators$ReasonSuperTinyCompiler.get_error(Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.string("abx"), "abra"));
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](ParseError$ReasonSuperTinyCompiler.getAllStackTrace(error)), /* array */["Expected: abx at line 1, column 1"]);
                             }));
               }));
         Jest.describe("string", (function (param) {
                 Jest.test("success", (function (param) {
-                        var result = Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](Parser$ReasonSuperTinyCompiler.Parsers[/* string */6]("abr"), "abra");
-                        return Jest.Expect[/* toBe */2]("abr", Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](result)));
+                        var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.string("abr"), "abra");
+                        return Jest.Expect[/* toBe */2]("abr", Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)));
                       }));
                 return Jest.test("failure", (function (param) {
                               return Jest.Expect[/* toThrow */18](Jest.Expect[/* expect */0]((function (param) {
-                                                return Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](Parser$ReasonSuperTinyCompiler.Parsers[/* string */6]("abx"), "abra"));
+                                                return Combinators$ReasonSuperTinyCompiler.get_exn(Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.string("abx"), "abra"));
                                               })));
                             }));
               }));
         Jest.describe("orElse", (function (param) {
-                var p = Parser$ReasonSuperTinyCompiler.Parsers[/* orElse */7](Parser$ReasonSuperTinyCompiler.Parsers[/* string */6]("aa"), Parser$ReasonSuperTinyCompiler.Parsers[/* string */6]("bb"));
+                var p = Combinators$ReasonSuperTinyCompiler.orElse(Combinators$ReasonSuperTinyCompiler.string("aa"), Combinators$ReasonSuperTinyCompiler.string("bb"));
                 Jest.test("success first branch", (function (param) {
-                        var result = Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, "aabra");
-                        return Jest.Expect[/* toBe */2]("aa", Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](result)));
+                        var result = Combinators$ReasonSuperTinyCompiler.run(p, "aabra");
+                        return Jest.Expect[/* toBe */2]("aa", Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)));
                       }));
                 Jest.test("success second branch", (function (param) {
-                        var result = Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, "bbra");
-                        return Jest.Expect[/* toBe */2]("bb", Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](result)));
+                        var result = Combinators$ReasonSuperTinyCompiler.run(p, "bbra");
+                        return Jest.Expect[/* toBe */2]("bb", Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)));
                       }));
                 return Jest.test("failure", (function (param) {
-                              var result = Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, "abbra");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.ParseError[/* getAllStackTrace */3](Parser$ReasonSuperTinyCompiler.Parsers[/* get_error */5](result))), /* array */[
+                              var result = Combinators$ReasonSuperTinyCompiler.run(p, "abbra");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](ParseError$ReasonSuperTinyCompiler.getAllStackTrace(Combinators$ReasonSuperTinyCompiler.get_error(result))), /* array */[
                                           "Expected: bb at line 1, column 1",
                                           "Expected: aa at line 1, column 1"
                                         ]);
                             }));
               }));
         Jest.describe("flatMap", (function (param) {
-                var p = Parser$ReasonSuperTinyCompiler.Parsers[/* flatMap */8](Parser$ReasonSuperTinyCompiler.Parsers[/* string */6]("aa"), (function (param) {
-                        return Parser$ReasonSuperTinyCompiler.Parsers[/* string */6]("bb");
+                var p = Combinators$ReasonSuperTinyCompiler.flatMap(Combinators$ReasonSuperTinyCompiler.string("aa"), (function (param) {
+                        return Combinators$ReasonSuperTinyCompiler.string("bb");
                       }));
                 Jest.test("success", (function (param) {
-                        var result = Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, "aabb");
-                        return Jest.Expect[/* toBe */2]("bb", Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](result)));
+                        var result = Combinators$ReasonSuperTinyCompiler.run(p, "aabb");
+                        return Jest.Expect[/* toBe */2]("bb", Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)));
                       }));
                 return Jest.test("failure", (function (param) {
-                              var result = Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, "aaabb");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.ParseError[/* getAllStackTrace */3](Parser$ReasonSuperTinyCompiler.Parsers[/* get_error */5](result))), /* array */["Expected: bb at line 1, column 3"]);
+                              var result = Combinators$ReasonSuperTinyCompiler.run(p, "aaabb");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](ParseError$ReasonSuperTinyCompiler.getAllStackTrace(Combinators$ReasonSuperTinyCompiler.get_error(result))), /* array */["Expected: bb at line 1, column 3"]);
                             }));
               }));
         Jest.test("unit", (function (param) {
-                var result = Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](Parser$ReasonSuperTinyCompiler.Parsers[/* unit */9](1), "abra");
-                return Curry._2(Jest.Expect[/* Operators */25][/* == */0], Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](result)), 1);
+                var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.unit(1), "abra");
+                return Curry._2(Jest.Expect[/* Operators */25][/* == */0], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), 1);
               }));
         Jest.describe("many", (function (param) {
-                var p = Parser$ReasonSuperTinyCompiler.Parsers[/* many */11](Parser$ReasonSuperTinyCompiler.Parsers[/* string */6]("aa"));
+                var p = Combinators$ReasonSuperTinyCompiler.many(Combinators$ReasonSuperTinyCompiler.string("aa"));
                 Jest.test("aaaa", (function (param) {
-                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, "aaaa"))), /* array */[
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(Combinators$ReasonSuperTinyCompiler.run(p, "aaaa"))), /* array */[
                                     "aa",
                                     "aa"
                                   ]);
                       }));
                 Jest.test("aa", (function (param) {
-                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, "aa"))), /* array */["aa"]);
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(Combinators$ReasonSuperTinyCompiler.run(p, "aa"))), /* array */["aa"]);
                       }));
                 return Jest.test("no input", (function (param) {
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, ""))), /* array */[]);
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(Combinators$ReasonSuperTinyCompiler.run(p, ""))), /* array */[]);
                             }));
               }));
         Jest.describe("many1", (function (param) {
-                var p = Parser$ReasonSuperTinyCompiler.Parsers[/* many1 */12](Parser$ReasonSuperTinyCompiler.Parsers[/* string */6]("a"));
+                var p = Combinators$ReasonSuperTinyCompiler.many1(Combinators$ReasonSuperTinyCompiler.string("a"));
                 Jest.test("success", (function (param) {
-                        var result = Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, "aabb");
-                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](result)), /* array */[
+                        var result = Combinators$ReasonSuperTinyCompiler.run(p, "aabb");
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* array */[
                                     "a",
                                     "a"
                                   ]);
                       }));
                 return Jest.test("failure", (function (param) {
-                              var result = Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, "bb");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.ParseError[/* getAllStackTrace */3](Parser$ReasonSuperTinyCompiler.Parsers[/* get_error */5](result))), /* array */["Expected at least one repetition for parser at line 1, column 1"]);
+                              var result = Combinators$ReasonSuperTinyCompiler.run(p, "bb");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](ParseError$ReasonSuperTinyCompiler.getAllStackTrace(Combinators$ReasonSuperTinyCompiler.get_error(result))), /* array */["Expected at least one repetition for parser at line 1, column 1"]);
                             }));
               }));
         Jest.test("slice", (function (param) {
-                var p = Parser$ReasonSuperTinyCompiler.Parsers[/* slice */13](Parser$ReasonSuperTinyCompiler.Parsers[/* many1 */12](Parser$ReasonSuperTinyCompiler.Parsers[/* string */6]("a")));
-                var result = Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, "aaabb");
-                return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](result)), "aaa");
+                var p = Combinators$ReasonSuperTinyCompiler.slice(Combinators$ReasonSuperTinyCompiler.many1(Combinators$ReasonSuperTinyCompiler.string("a")));
+                var result = Combinators$ReasonSuperTinyCompiler.run(p, "aaabb");
+                return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), "aaa");
               }));
-        return Jest.test("regex", (function (param) {
-                      var p = Parser$ReasonSuperTinyCompiler.Parsers[/* regex */14]("a(b)c?ra?");
-                      var result = Parser$ReasonSuperTinyCompiler.Parsers[/* run */1](p, "abrcaaaaa");
-                      return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Parser$ReasonSuperTinyCompiler.Parsers[/* get_exn */4](result)), /* array */[
-                                  "abr",
-                                  "b"
-                                ]);
+        Jest.describe("regex", (function (param) {
+                Jest.test("simple", (function (param) {
+                        var p = Combinators$ReasonSuperTinyCompiler.regex("a(b)c?ra?");
+                        var result = Combinators$ReasonSuperTinyCompiler.run(p, "abrcaaaaa");
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* array */[
+                                    "abr",
+                                    "b"
+                                  ]);
+                      }));
+                return Jest.test("continuation", (function (param) {
+                              var p = Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great, Combinators$ReasonSuperTinyCompiler.regex("a(b)c?ra?"), Combinators$ReasonSuperTinyCompiler.string("c"));
+                              var result = Combinators$ReasonSuperTinyCompiler.run(p, "abrcaaaaa");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* tuple */[
+                                          /* array */[
+                                            "abr",
+                                            "b"
+                                          ],
+                                          "c"
+                                        ]);
+                            }));
+              }));
+        return Jest.describe("sepBy", (function (param) {
+                      Jest.test("no repetition", (function (param) {
+                              var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(",", Combinators$ReasonSuperTinyCompiler.string("a")), "");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* array */[]);
+                            }));
+                      Jest.test("one repetition", (function (param) {
+                              var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(",", Combinators$ReasonSuperTinyCompiler.string("a")), "a");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* array */["a"]);
+                            }));
+                      Jest.test("sepBy", (function (param) {
+                              var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(",", Combinators$ReasonSuperTinyCompiler.string("a")), "a,a,a");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* array */[
+                                          "a",
+                                          "a",
+                                          "a"
+                                        ]);
+                            }));
+                      return Jest.test("sepBy with last sep", (function (param) {
+                                    var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(",", Combinators$ReasonSuperTinyCompiler.string("a")), "a,a,a,");
+                                    return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* array */[
+                                                "a",
+                                                "a",
+                                                "a"
+                                              ]);
+                                  }));
                     }));
       }));
 

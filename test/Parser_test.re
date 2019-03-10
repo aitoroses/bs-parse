@@ -1,6 +1,10 @@
 open Jest;
 
-open Parser.Parsers;
+open Combinators;
+
+type bools =
+  | True
+  | False
 
 describe("Parsers", () => {
   open Expect;
@@ -8,8 +12,8 @@ describe("Parsers", () => {
 
   describe("errors", () => {
     test("should be nice", () => {
-      let error = run(string("abx"), "abra") |> get_error |> Parser.ParseError.toString;
-      expect(error) === "Expected: abx at line 1, column 1"
+      let error = run(string("abx"), "abra") |> get_error;
+      expect(error |> ParseError.getAllStackTrace) == [|"Expected: abx at line 1, column 1"|]
     })
   })
 
@@ -42,7 +46,7 @@ describe("Parsers", () => {
 
     test("failure", () => {
       let result = run(p, "abbra");
-      expect(result |> get_error |> Parser.ParseError.getAllStackTrace) == [|
+      expect(result |> get_error |> ParseError.getAllStackTrace) == [|
         "Expected: bb at line 1, column 1",
         "Expected: aa at line 1, column 1"
       |]
@@ -59,7 +63,7 @@ describe("Parsers", () => {
 
     test("failure", () => {
       let result = run(p, "aaabb") ;
-      expect(result |> get_error |> Parser.ParseError.getAllStackTrace) == [|
+      expect(result |> get_error |> ParseError.getAllStackTrace) == [|
         "Expected: bb at line 1, column 3",
       |]
     })
@@ -96,7 +100,7 @@ describe("Parsers", () => {
 
     test("failure", () => {
       let result = run(p, "bb") ;
-      expect(result |> get_error |> Parser.ParseError.getAllStackTrace) == [|
+      expect(result |> get_error |> ParseError.getAllStackTrace) == [|
         "Expected at least one repetition for parser at line 1, column 1",
       |]
     })
@@ -108,9 +112,57 @@ describe("Parsers", () => {
     expect(result |> get_exn) == "aaa"
   })
 
-  test("regex", () => {  
-    let p = regex("a(b)c?ra?")
-    let result = run(p, "abrcaaaaa");
-    expect(result |> get_exn) == [|"abr", "b"|]
+  describe("regex", () => {
+
+    test("simple", () => {  
+      let p = regex("a(b)c?ra?")
+      let result = run(p, "abrcaaaaa");
+      expect(result |> get_exn) == [|"abr", "b"|]
+    })
+
+    test("continuation", () => {  
+      let p = regex("a(b)c?ra?") >> string("c")
+      let result = run(p, "abrcaaaaa");
+      expect(result |> get_exn) == ([|"abr", "b"|], "c")
+    })
+  })
+
+  describe("sepBy", () => {
+
+    test("no repetition", () => {
+        let json = {||}
+        let result = run(sepBy(",", string("a")), json)
+        expect(result |> get_exn) == [||]
+    })
+
+    test("one repetition", () => {
+        let json = {|a|}
+        let result = run(sepBy(",", string("a")), json)
+        expect(result |> get_exn) == [|"a"|]
+    })
+
+    test("sepBy", () => {
+        let json = {|a,a,a|}
+        let result = run(sepBy(",", string("a")), json)
+        expect(result |> get_exn) == [|"a", "a", "a"|]
+    })
+
+    test("sepBy with last sep", () => {
+        let json = {|a,a,a,|}
+        let result = run(sepBy(",", string("a")), json)
+        expect(result |> get_exn) == [|"a", "a", "a"|]
+    })
+
+    /*test("sepBy kinds", () => {
+      let trueBool = string("true") <$> _ => True
+      let falseBool = string("false") <$> _ => False
+
+      let parser = JSON.Parser.surround(JSON.Parser.whitespace, orElse(trueBool, falseBool), JSON.Parser.whitespace)
+
+      let list = {|true, false, true , false|}
+      let result = run(sepBy(",", parser), list)
+      expect(result |> get_exn) == [|True, False, True, True|]
+    })*/
+
   })
 });
