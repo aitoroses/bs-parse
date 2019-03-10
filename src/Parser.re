@@ -8,7 +8,7 @@ module type Parsers = {
   let get_exn: parse_result('a) => 'a
   let get_error: parse_result('a) => parse_error
   let string: string => parser(string)
-  let orElse: (parser('a), parser('a)) => parser('a)
+  let orElse: (parser('a), Lazy.t(parser('a))) => parser('a)
   let flatMap: parser('a) => ('a => parser('b)) => parser('b)
   let unit: 'a => parser('a)
   let listOfN: int => parser('a) => parser(array('a))

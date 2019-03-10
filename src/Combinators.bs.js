@@ -8,6 +8,7 @@ var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Belt_Option = require("bs-platform/lib/js/belt_Option.js");
 var Caml_option = require("bs-platform/lib/js/caml_option.js");
 var Caml_exceptions = require("bs-platform/lib/js/caml_exceptions.js");
+var CamlinternalLazy = require("bs-platform/lib/js/camlinternalLazy.js");
 var Parser$ReasonSuperTinyCompiler = require("./Parser.bs.js");
 var Location$ReasonSuperTinyCompiler = require("./Location.bs.js");
 var ParseError$ReasonSuperTinyCompiler = require("./ParseError.bs.js");
@@ -81,7 +82,10 @@ function orElse(p1, p2) {
   return /* Parser */Block.__(2, [(function (loc) {
                 var ok = runParser(p1, loc);
                 if (ok.tag) {
-                  var ok$1 = runParser(p2, loc);
+                  var tag = p2.tag | 0;
+                  var ok$1 = runParser(tag === 250 ? p2[0] : (
+                          tag === 246 ? CamlinternalLazy.force_lazy_block(p2) : p2
+                        ), loc);
                   if (ok$1.tag) {
                     var error2 = ok$1[0];
                     var stack = error2[/* stack */0];

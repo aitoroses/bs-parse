@@ -89,22 +89,22 @@ Jest.describe("JSON parser", (function (param) {
               }));
         Jest.describe("array", (function (param) {
                 Jest.test("empty array", (function (param) {
-                        var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* array */14], "[]");
+                        var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* array */16], "[]");
                         return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JArray */Block.__(3, [/* array */[]]));
                       }));
                 Jest.test("one member", (function (param) {
-                        var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* array */14], "[\"hello\"]");
+                        var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* array */16], "[\"hello\"]");
                         return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JArray */Block.__(3, [/* array */[/* JString */Block.__(1, ["hello"])]]));
                       }));
                 Jest.test("more members", (function (param) {
-                        var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* array */14], "[\"hello\",true]");
+                        var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* array */16], "[\"hello\",true]");
                         return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JArray */Block.__(3, [/* array */[
                                         /* JString */Block.__(1, ["hello"]),
                                         /* JBool */Block.__(2, [true])
                                       ]]));
                       }));
                 return Jest.test("space between", (function (param) {
-                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* array */14], "[    \"hello\"   ,    true   ]");
+                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* array */16], "[    \"hello\"   ,    true   ]");
                               return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JArray */Block.__(3, [/* array */[
                                               /* JString */Block.__(1, ["hello"]),
                                               /* JBool */Block.__(2, [true])
@@ -113,32 +113,32 @@ Jest.describe("JSON parser", (function (param) {
               }));
         return Jest.describe("object", (function (param) {
                       Jest.test("empty object", (function (param) {
-                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */13], "{}");
+                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */15], "{}");
                               return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JObject */Block.__(4, [/* array */[]]));
                             }));
                       Jest.test("member expression", (function (param) {
-                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* objectMember */12], "\"hello\" : \"world\"");
+                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* objectMember */14], "\"hello\" : \"world\"");
                               return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* tuple */[
                                           "hello",
                                           /* JString */Block.__(1, ["world"])
                                         ]);
                             }));
                       Jest.test("one member object", (function (param) {
-                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */13], "{ \"hello\" : \"world\" }");
+                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */15], "{ \"hello\" : \"world\" }");
                               return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
                                                 "hello",
                                                 /* JString */Block.__(1, ["world"])
                                               ]]]));
                             }));
                       Jest.test("one member object 2", (function (param) {
-                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */13], "{ \"one\": 1 }");
+                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */15], "{ \"one\": 1 }");
                               return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
                                                 "one",
                                                 /* JNumber */Block.__(0, [1.0])
                                               ]]]));
                             }));
                       Jest.test("two member object", (function (param) {
-                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */13], "{ \"hello\" : \"world\", \"one\": 1 }");
+                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */15], "{ \"hello\" : \"world\", \"one\": 1 }");
                               return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JObject */Block.__(4, [/* array */[
                                               /* tuple */[
                                                 "hello",
@@ -150,18 +150,70 @@ Jest.describe("JSON parser", (function (param) {
                                               ]
                                             ]]));
                             }));
-                      return Jest.test("two member withObject", (function (param) {
-                                    var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */13], "{ \"hello\" : \"world\", \"one\": 1 }");
-                                    return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JObject */Block.__(4, [/* array */[
-                                                    /* tuple */[
-                                                      "hello",
-                                                      /* JString */Block.__(1, ["world"])
-                                                    ],
-                                                    /* tuple */[
-                                                      "one",
-                                                      /* JNumber */Block.__(0, [1.0])
-                                                    ]
-                                                  ]]));
+                      Jest.test("two member withObject", (function (param) {
+                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */15], "{ \"hello\" : \"world\", \"one\": 1 }");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JObject */Block.__(4, [/* array */[
+                                              /* tuple */[
+                                                "hello",
+                                                /* JString */Block.__(1, ["world"])
+                                              ],
+                                              /* tuple */[
+                                                "one",
+                                                /* JNumber */Block.__(0, [1.0])
+                                              ]
+                                            ]]));
+                            }));
+                      Jest.test("multiple keys", (function (param) {
+                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */15], "{\n                \"Company name\" : \"Microsoft Corporation\",\n                \"Ticker\"  : \"MSFT\",\n                \"Active\"  : true,\n                \"Price\"   : 30.66,\n                \"Shares outstanding\" : 8\n            }");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JObject */Block.__(4, [/* array */[
+                                              /* tuple */[
+                                                "Company name",
+                                                /* JString */Block.__(1, ["Microsoft Corporation"])
+                                              ],
+                                              /* tuple */[
+                                                "Ticker",
+                                                /* JString */Block.__(1, ["MSFT"])
+                                              ],
+                                              /* tuple */[
+                                                "Active",
+                                                /* JBool */Block.__(2, [true])
+                                              ],
+                                              /* tuple */[
+                                                "Price",
+                                                /* JNumber */Block.__(0, [30.66])
+                                              ],
+                                              /* tuple */[
+                                                "Shares outstanding",
+                                                /* JNumber */Block.__(0, [8.0])
+                                              ]
+                                            ]]));
+                            }));
+                      Jest.test("nexted array", (function (param) {
+                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */15], "{\n                \"obj\": [1, 2]\n            }");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
+                                                "obj",
+                                                /* JArray */Block.__(3, [/* array */[
+                                                      /* JNumber */Block.__(0, [1.0]),
+                                                      /* JNumber */Block.__(0, [2.0])
+                                                    ]])
+                                              ]]]));
+                            }));
+                      Jest.test("nested empty object", (function (param) {
+                              var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */15], "{\n                \"obj\": {}\n            }");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
+                                                "obj",
+                                                /* JObject */Block.__(4, [/* array */[]])
+                                              ]]]));
+                            }));
+                      return Jest.test("nested empty object with data", (function (param) {
+                                    var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */15], "{\n                \"obj\": {\n                    \"hello\": \"world\"\n                }\n            }");
+                                    return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
+                                                      "obj",
+                                                      /* JObject */Block.__(4, [/* array */[/* tuple */[
+                                                              "hello",
+                                                              /* JString */Block.__(1, ["world"])
+                                                            ]]])
+                                                    ]]]));
                                   }));
                     }));
       }));

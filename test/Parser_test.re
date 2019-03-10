@@ -32,7 +32,7 @@ describe("Parsers", () => {
 
   describe("orElse", () => {
 
-    let p = orElse(string("aa"), string("bb"))
+    let p = orElse(string("aa"), lazy string("bb"))
 
     test("success first branch", () => {
       let result = run(p, "aabra") ;

@@ -27,7 +27,7 @@ var falseBool = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combi
         return /* JBool */Block.__(2, [false]);
       }));
 
-var bools = Combinators$ReasonSuperTinyCompiler.orElse(trueBool, falseBool);
+var bools = Combinators$ReasonSuperTinyCompiler.orElse(trueBool, Block.__(250, [falseBool]));
 
 var str = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.regex("\"([^\"]*)\""), (function (matches) {
         return Caml_array.caml_array_get(matches, 1);
@@ -41,7 +41,7 @@ var number = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinat
         return /* JNumber */Block.__(0, [Caml_format.caml_float_of_string(numberStr)]);
       }));
 
-var literal = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, $$undefined, $$null), bools), quotedString), number);
+var literal = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, $$undefined, Block.__(250, [$$null])), Block.__(250, [bools])), Block.__(250, [quotedString])), Block.__(250, [number]));
 
 function spaceAround(bodyP) {
   return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, whitespace, (function (param) {
@@ -63,24 +63,48 @@ function surround(openP, bodyP, closeP) {
               }));
 }
 
-var objectMember = Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, Combinators$ReasonSuperTinyCompiler.regex("\"([^\"]*)\"\\s*:\\s*"), (function (captured) {
-        return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, literal, (function (lit) {
-                      return /* tuple */[
-                              Caml_array.caml_array_get(captured, 1),
-                              lit
-                            ];
-                    }));
-      }));
+function objectMemberP(expr) {
+  return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, Combinators$ReasonSuperTinyCompiler.regex("\"([^\"]*)\"\\s*:\\s*"), (function (captured) {
+                return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, expr, (function (lit) {
+                              return /* tuple */[
+                                      Caml_array.caml_array_get(captured, 1),
+                                      lit
+                                    ];
+                            }));
+              }));
+}
 
-var obj = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, surround(Combinators$ReasonSuperTinyCompiler.string("{"), Combinators$ReasonSuperTinyCompiler.sepBy(",", spaceAround(objectMember)), Combinators$ReasonSuperTinyCompiler.string("}")), (function (res) {
-        return /* JObject */Block.__(4, [res]);
-      }));
+function objP(expr) {
+  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, surround(Combinators$ReasonSuperTinyCompiler.string("{"), Combinators$ReasonSuperTinyCompiler.sepBy(",", spaceAround(objectMemberP(expr))), Combinators$ReasonSuperTinyCompiler.string("}")), (function (res) {
+                return /* JObject */Block.__(4, [res]);
+              }));
+}
 
-var array = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, surround(Combinators$ReasonSuperTinyCompiler.string("["), Combinators$ReasonSuperTinyCompiler.sepBy(",", spaceAround(literal)), Combinators$ReasonSuperTinyCompiler.string("]")), (function (res) {
-        return /* JArray */Block.__(3, [res]);
-      }));
+function arrayP(expr) {
+  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, surround(Combinators$ReasonSuperTinyCompiler.string("["), Combinators$ReasonSuperTinyCompiler.sepBy(",", spaceAround(expr)), Combinators$ReasonSuperTinyCompiler.string("]")), (function (res) {
+                return /* JArray */Block.__(3, [res]);
+              }));
+}
 
-var expr = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, literal, obj), array);
+var RecursiveParsers = /* module */[
+  /* objectMemberP */objectMemberP,
+  /* objP */objP,
+  /* arrayP */arrayP
+];
+
+function expr(param) {
+  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, literal, Block.__(246, [(function (param) {
+                        return objP(expr(/* () */0));
+                      })])), Block.__(246, [(function (param) {
+                    return arrayP(expr(/* () */0));
+                  })]));
+}
+
+var objectMember = objectMemberP(expr(/* () */0));
+
+var obj = objP(expr(/* () */0));
+
+var array = arrayP(expr(/* () */0));
 
 var Parser = /* module */[
   /* whitespace */whitespace,
@@ -95,10 +119,11 @@ var Parser = /* module */[
   /* literal */literal,
   /* spaceAround */spaceAround,
   /* surround */surround,
+  /* RecursiveParsers */RecursiveParsers,
+  /* expr */expr,
   /* objectMember */objectMember,
   /* obj */obj,
-  /* array */array,
-  /* expr */expr
+  /* array */array
 ];
 
 exports.Parser = Parser;

@@ -53,7 +53,7 @@ module BasicCombinators: Parsers = { // bind equation to externally treat it lik
   let orElse = p1 => p2 => Parser(loc => {
     switch(runParser(p1, loc)) {
     | Err(error1) =>
-      switch(runParser(p2,loc)) {
+      switch(runParser(Lazy.force(p2),loc)) {
       | Err(error2) =>
         let stack = error2.stack
         let otherFailures = Array.append([|error1|], error2.otherFailures)

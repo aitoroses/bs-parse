@@ -2,6 +2,7 @@
 'use strict';
 
 var Jest = require("@glennsl/bs-jest/src/jest.js");
+var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var ParseError$ReasonSuperTinyCompiler = require("../src/ParseError.bs.js");
 var Combinators$ReasonSuperTinyCompiler = require("../src/Combinators.bs.js");
@@ -25,7 +26,9 @@ Jest.describe("Parsers", (function (param) {
                             }));
               }));
         Jest.describe("orElse", (function (param) {
-                var p = Combinators$ReasonSuperTinyCompiler.orElse(Combinators$ReasonSuperTinyCompiler.string("aa"), Combinators$ReasonSuperTinyCompiler.string("bb"));
+                var p = Combinators$ReasonSuperTinyCompiler.orElse(Combinators$ReasonSuperTinyCompiler.string("aa"), Block.__(246, [(function (param) {
+                            return Combinators$ReasonSuperTinyCompiler.string("bb");
+                          })]));
                 Jest.test("success first branch", (function (param) {
                         var result = Combinators$ReasonSuperTinyCompiler.run(p, "aabra");
                         return Jest.Expect[/* toBe */2]("aa", Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)));

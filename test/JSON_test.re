@@ -190,6 +190,61 @@ describe("JSON parser", () => {
                 ("one", JSON.JNumber(1.0))
             |])
         })
+
+        test("multiple keys", () => {
+            let json = {|{
+                "Company name" : "Microsoft Corporation",
+                "Ticker"  : "MSFT",
+                "Active"  : true,
+                "Price"   : 30.66,
+                "Shares outstanding" : 8
+            }|}
+            let result = run(JSON.Parser.obj, json)
+            expect(result |> get_exn) == JSON.JObject([|
+                ("Company name", JSON.JString("Microsoft Corporation")),
+                ("Ticker", JSON.JString("MSFT")),
+                ("Active", JSON.JBool(true)),
+                ("Price", JSON.JNumber(30.66)),
+                ("Shares outstanding", JSON.JNumber(8.0))
+            |])
+        })
+
+        test("nexted array", () => {
+            let json = {|{
+                "obj": [1, 2]
+            }|}
+            let result = run(JSON.Parser.obj, json)
+            expect(result |> get_exn) == JSON.JObject([|
+                ("obj", JSON.JArray([|
+                    JSON.JNumber(1.0), 
+                    JSON.JNumber(2.0)
+                |]))
+            |])
+        })
+
+        test("nested empty object", () => {
+            let json = {|{
+                "obj": {}
+            }|}
+            let result = run(JSON.Parser.obj, json)
+            expect(result |> get_exn) == JSON.JObject([|
+                ("obj", JSON.JObject([||]))
+            |])
+        })
+
+        test("nested empty object with data", () => {
+            let json = {|{
+                "obj": {
+                    "hello": "world"
+                }
+            }|}
+            let result = run(JSON.Parser.obj, json)
+            expect(result |> get_exn) == JSON.JObject([|
+                ("obj", JSON.JObject([|
+                    ("hello", JSON.JString("world"))
+                |]))
+            |])
+        })
     })
 
 })
