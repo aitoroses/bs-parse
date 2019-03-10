@@ -148,7 +148,7 @@ describe("JSON parser", () => {
         })
     })
     
-    Only.describe("object", () => {
+    describe("object", () => {
         test("empty object", () => {
             let json = {|{}|}
             let result = run(JSON.Parser.obj, json)

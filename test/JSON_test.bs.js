@@ -111,7 +111,7 @@ Jest.describe("JSON parser", (function (param) {
                                             ]]));
                             }));
               }));
-        return Jest.Only[/* describe */4]("object", (function (param) {
+        return Jest.describe("object", (function (param) {
                       Jest.test("empty object", (function (param) {
                               var result = Combinators$ReasonSuperTinyCompiler.run(JSON$ReasonSuperTinyCompiler.Parser[/* obj */13], "{}");
                               return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* JObject */Block.__(4, [/* array */[]]));
