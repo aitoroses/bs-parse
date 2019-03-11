@@ -132,25 +132,25 @@ describe("Parsers", () => {
 
     test("no repetition", () => {
         let json = {||}
-        let result = run(sepBy(",", string("a")), json)
+        let result = run(sepBy(string(","), string("a")), json)
         expect(result |> get_exn) == [||]
     })
 
     test("one repetition", () => {
         let json = {|a|}
-        let result = run(sepBy(",", string("a")), json)
+        let result = run(sepBy(string(","), string("a")), json)
         expect(result |> get_exn) == [|"a"|]
     })
 
     test("sepBy", () => {
         let json = {|a,a,a|}
-        let result = run(sepBy(",", string("a")), json)
+        let result = run(sepBy(string(","), string("a")), json)
         expect(result |> get_exn) == [|"a", "a", "a"|]
     })
 
     test("sepBy with last sep", () => {
         let json = {|a,a,a,|}
-        let result = run(sepBy(",", string("a")), json)
+        let result = run(sepBy(string(","), string("a")), json)
         expect(result |> get_exn) == [|"a", "a", "a"|]
     })
 

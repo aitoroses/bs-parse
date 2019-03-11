@@ -273,7 +273,7 @@ function sepBy(sep, p) {
                     var match$1 = match[0];
                     var loc$2 = match$1[1];
                     var newAcc = $$Array.append(acc, /* array */[match$1[0]]);
-                    var match$2 = runParser(string(sep$1), loc$2);
+                    var match$2 = runParser(sep$1, loc$2);
                     if (match$2.tag) {
                       return /* Ok */Block.__(0, [/* tuple */[
                                   newAcc,

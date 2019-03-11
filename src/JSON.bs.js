@@ -51,13 +51,13 @@ function objectMemberP(expr) {
 }
 
 function objP(expr) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.surround(Combinators$ReasonSuperTinyCompiler.string("{"), Combinators$ReasonSuperTinyCompiler.sepBy(",", CommonCombinators$ReasonSuperTinyCompiler.spaceAround(objectMemberP(expr))), Combinators$ReasonSuperTinyCompiler.string("}")), (function (res) {
+  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.surround(Combinators$ReasonSuperTinyCompiler.string("{"), Combinators$ReasonSuperTinyCompiler.sepBy(Combinators$ReasonSuperTinyCompiler.string(","), CommonCombinators$ReasonSuperTinyCompiler.spaceAround(objectMemberP(expr))), Combinators$ReasonSuperTinyCompiler.string("}")), (function (res) {
                 return /* JObject */Block.__(4, [res]);
               }));
 }
 
 function arrayP(expr) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.surround(Combinators$ReasonSuperTinyCompiler.string("["), Combinators$ReasonSuperTinyCompiler.sepBy(",", CommonCombinators$ReasonSuperTinyCompiler.spaceAround(expr)), Combinators$ReasonSuperTinyCompiler.string("]")), (function (res) {
+  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.surround(Combinators$ReasonSuperTinyCompiler.string("["), Combinators$ReasonSuperTinyCompiler.sepBy(Combinators$ReasonSuperTinyCompiler.string(","), CommonCombinators$ReasonSuperTinyCompiler.spaceAround(expr)), Combinators$ReasonSuperTinyCompiler.string("]")), (function (res) {
                 return /* JArray */Block.__(3, [res]);
               }));
 }

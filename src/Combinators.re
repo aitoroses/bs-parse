@@ -150,7 +150,7 @@ module BasicCombinators: Parsers = { // bind equation to externally treat it lik
       switch(runParser(p, loc)) {
       | Ok((v, loc)) =>
         let newAcc = Array.append(acc, [|v|])
-        switch(runParser(string(sep), loc)) {
+        switch(runParser(sep, loc)) {
         | Ok((_, loc)) => parse(sep, p, loc, newAcc)
         | Err(_) => Ok((newAcc, loc)) 
         }

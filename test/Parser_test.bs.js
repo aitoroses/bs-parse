@@ -122,15 +122,15 @@ Jest.describe("Parsers", (function (param) {
               }));
         return Jest.describe("sepBy", (function (param) {
                       Jest.test("no repetition", (function (param) {
-                              var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(",", Combinators$ReasonSuperTinyCompiler.string("a")), "");
+                              var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(Combinators$ReasonSuperTinyCompiler.string(","), Combinators$ReasonSuperTinyCompiler.string("a")), "");
                               return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* array */[]);
                             }));
                       Jest.test("one repetition", (function (param) {
-                              var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(",", Combinators$ReasonSuperTinyCompiler.string("a")), "a");
+                              var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(Combinators$ReasonSuperTinyCompiler.string(","), Combinators$ReasonSuperTinyCompiler.string("a")), "a");
                               return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* array */["a"]);
                             }));
                       Jest.test("sepBy", (function (param) {
-                              var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(",", Combinators$ReasonSuperTinyCompiler.string("a")), "a,a,a");
+                              var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(Combinators$ReasonSuperTinyCompiler.string(","), Combinators$ReasonSuperTinyCompiler.string("a")), "a,a,a");
                               return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* array */[
                                           "a",
                                           "a",
@@ -138,7 +138,7 @@ Jest.describe("Parsers", (function (param) {
                                         ]);
                             }));
                       return Jest.test("sepBy with last sep", (function (param) {
-                                    var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(",", Combinators$ReasonSuperTinyCompiler.string("a")), "a,a,a,");
+                                    var result = Combinators$ReasonSuperTinyCompiler.run(Combinators$ReasonSuperTinyCompiler.sepBy(Combinators$ReasonSuperTinyCompiler.string(","), Combinators$ReasonSuperTinyCompiler.string("a")), "a,a,a,");
                                     return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* array */[
                                                 "a",
                                                 "a",

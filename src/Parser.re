@@ -16,7 +16,7 @@ module type Parsers = {
   let many1: parser('a) => parser(array('a))
   let slice: parser('a) => parser(string)
   let regex: string => parser(array(string))
-  let sepBy: string => parser('a) => parser(array('a))
+  let sepBy: parser('b) => parser('a) => parser(array('a))
 
   /* seq(p)(f): Run a parser, then use its result to select a second parser to run in sequence 
    * for me this one is flatMap
