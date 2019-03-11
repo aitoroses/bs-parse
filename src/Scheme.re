@@ -21,7 +21,6 @@ let literal =
     lazy quotedString <|>
     lazy number
 
-
 let openParen = string("(")
 let closeParen = string(")")
 let listR = expr => sepBy(whitespace, expr)
@@ -48,4 +47,6 @@ let rec exprR = lazy (
     lazy surroundedListR(exprR)
 )
 
-let expr = spaceAround(Lazy.force(exprR))
+let expr = spaceAround(Lazy.force(exprR)) >>= value => {
+    eof <$> _ => value
+}

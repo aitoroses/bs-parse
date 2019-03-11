@@ -1,5 +1,8 @@
 open Combinators;
 
+let eof = (regex("$") |> slice <$> _ => ())
+        |> label("Expected EOF")
+
 let whitespace = regex("[\s]*") |> slice <$> _ => ()
 
 let spaceAround = bodyP =>

@@ -25,7 +25,7 @@ describe("Scheme", () => {
         expect(result |> get_exn) == False
     })
 
-    Only.test("list", () => {
+    test("list", () => {
         let json = {| (+ 1 2) |}
         let result = run(Scheme.expr, json)
         expect(result |> get_exn) == ProcedureCall("+", [|
@@ -52,6 +52,16 @@ describe("Scheme", () => {
                 Number(2.0)
             |])
         |])
+    })
+
+    test("EOF", () => {
+        let json = {|
+        (1))
+        |}
+        let result = run(Scheme.expr, json)
+        expect(result |> get_error |> ParseError.getAllStackTrace) == [|
+            "Expected EOF at line 2, column 12"
+        |]
     })
 
 })

@@ -5,6 +5,10 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Combinators$ReasonSuperTinyCompiler = require("./Combinators.bs.js");
 
+var eof = Combinators$ReasonSuperTinyCompiler.label("Expected EOF", Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.slice(Combinators$ReasonSuperTinyCompiler.regex("$")), (function (param) {
+            return /* () */0;
+          })));
+
 var whitespace = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.slice(Combinators$ReasonSuperTinyCompiler.regex("[\\s]*")), (function (param) {
         return /* () */0;
       }));
@@ -35,9 +39,10 @@ var str = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators
         return Caml_array.caml_array_get(matches, 1);
       }));
 
+exports.eof = eof;
 exports.whitespace = whitespace;
 exports.spaceAround = spaceAround;
 exports.surround = surround;
 exports.number = number;
 exports.str = str;
-/* whitespace Not a pure module */
+/* eof Not a pure module */

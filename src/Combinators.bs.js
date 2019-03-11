@@ -39,8 +39,14 @@ function get_error(result) {
 function runParser(p, loc) {
   switch (p.tag | 0) {
     case 0 : 
-    case 1 : 
         return Curry._1(p[1], loc);
+    case 1 : 
+        var ok = Curry._1(p[1], loc);
+        if (ok.tag) {
+          return /* Err */Block.__(1, [ParseError$ReasonSuperTinyCompiler.make(loc, p[0])]);
+        } else {
+          return ok;
+        }
     case 2 : 
         return Curry._1(p[0], loc);
     

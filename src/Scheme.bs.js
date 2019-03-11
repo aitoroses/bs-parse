@@ -92,9 +92,13 @@ Caml_obj.caml_update_dummy(exprR, Block.__(246, [(function (param) {
 
 var tag = exprR.tag | 0;
 
-var expr = CommonCombinators$ReasonSuperTinyCompiler.spaceAround(tag === 250 ? exprR[0] : (
-        tag === 246 ? CamlinternalLazy.force_lazy_block(exprR) : exprR
-      ));
+var expr = Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, CommonCombinators$ReasonSuperTinyCompiler.spaceAround(tag === 250 ? exprR[0] : (
+            tag === 246 ? CamlinternalLazy.force_lazy_block(exprR) : exprR
+          )), (function (value) {
+        return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.eof, (function (param) {
+                      return value;
+                    }));
+      }));
 
 exports.trueBool = trueBool;
 exports.falseBool = falseBool;

@@ -28,7 +28,11 @@ module BasicCombinators: Parsers = { // bind equation to externally treat it lik
 
   let runParser = p => loc => switch(p) {
   | ScopedParser(_, fn) => fn(loc)
-  | LabeledParser(_, fn) => fn(loc)
+  | LabeledParser(m, fn) => 
+      switch(fn(loc)) {
+      | Err(_) => Err(ParseError.make(loc, m)) 
+      | ok => ok  
+      }
   | Parser(fn) => fn(loc)
   }
 

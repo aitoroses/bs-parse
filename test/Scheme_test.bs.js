@@ -5,6 +5,7 @@ var Jest = require("@glennsl/bs-jest/src/jest.js");
 var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var Scheme$ReasonSuperTinyCompiler = require("../src/Scheme.bs.js");
+var ParseError$ReasonSuperTinyCompiler = require("../src/ParseError.bs.js");
 var Combinators$ReasonSuperTinyCompiler = require("../src/Combinators.bs.js");
 
 Jest.describe("Scheme", (function (param) {
@@ -20,7 +21,7 @@ Jest.describe("Scheme", (function (param) {
                 var result = Combinators$ReasonSuperTinyCompiler.run(Scheme$ReasonSuperTinyCompiler.expr, "#f");
                 return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* False */1);
               }));
-        Jest.Only[/* test */0]("list", (function (param) {
+        Jest.test("list", (function (param) {
                 var result = Combinators$ReasonSuperTinyCompiler.run(Scheme$ReasonSuperTinyCompiler.expr, " (+ 1 2) ");
                 return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* ProcedureCall */Block.__(4, [
                               "+",
@@ -30,28 +31,32 @@ Jest.describe("Scheme", (function (param) {
                               ]
                             ]));
               }));
-        return Jest.test("if", (function (param) {
-                      var result = Combinators$ReasonSuperTinyCompiler.run(Scheme$ReasonSuperTinyCompiler.expr, "\n        (if #t\n         (+ 1 2)\n         (- 3 2))\n        ");
-                      return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* ProcedureCall */Block.__(4, [
-                                    "if",
+        Jest.test("if", (function (param) {
+                var result = Combinators$ReasonSuperTinyCompiler.run(Scheme$ReasonSuperTinyCompiler.expr, "\n        (if #t\n         (+ 1 2)\n         (- 3 2))\n        ");
+                return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$ReasonSuperTinyCompiler.get_exn(result)), /* ProcedureCall */Block.__(4, [
+                              "if",
+                              /* array */[
+                                /* True */0,
+                                /* ProcedureCall */Block.__(4, [
+                                    "+",
                                     /* array */[
-                                      /* True */0,
-                                      /* ProcedureCall */Block.__(4, [
-                                          "+",
-                                          /* array */[
-                                            /* Number */Block.__(1, [1.0]),
-                                            /* Number */Block.__(1, [2.0])
-                                          ]
-                                        ]),
-                                      /* ProcedureCall */Block.__(4, [
-                                          "-",
-                                          /* array */[
-                                            /* Number */Block.__(1, [3.0]),
-                                            /* Number */Block.__(1, [2.0])
-                                          ]
-                                        ])
+                                      /* Number */Block.__(1, [1.0]),
+                                      /* Number */Block.__(1, [2.0])
                                     ]
-                                  ]));
+                                  ]),
+                                /* ProcedureCall */Block.__(4, [
+                                    "-",
+                                    /* array */[
+                                      /* Number */Block.__(1, [3.0]),
+                                      /* Number */Block.__(1, [2.0])
+                                    ]
+                                  ])
+                              ]
+                            ]));
+              }));
+        return Jest.test("EOF", (function (param) {
+                      var result = Combinators$ReasonSuperTinyCompiler.run(Scheme$ReasonSuperTinyCompiler.expr, "\n        (1))\n        ");
+                      return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](ParseError$ReasonSuperTinyCompiler.getAllStackTrace(Combinators$ReasonSuperTinyCompiler.get_error(result))), /* array */["Expected EOF at line 2, column 12"]);
                     }));
       }));
 
