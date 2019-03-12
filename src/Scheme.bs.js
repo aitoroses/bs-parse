@@ -25,7 +25,9 @@ var number = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCo
         return /* Number */Block.__(1, [Caml_format.caml_float_of_string(numberStr)]);
       }));
 
-var identifier = Combinators$ReasonSuperTinyCompiler.slice(Combinators$ReasonSuperTinyCompiler.regex("[^()][\\S#]*"));
+var atom = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.slice(Combinators$ReasonSuperTinyCompiler.regex("[^()][\\S#]*")), (function (v) {
+        return /* Atom */Block.__(0, [v]);
+      }));
 
 var literal = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, trueBool, Block.__(250, [falseBool])), Block.__(250, [quotedString])), Block.__(250, [number]));
 
@@ -40,7 +42,7 @@ function listR(expr) {
 function procedureCallR(expr) {
   return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, openParen, (function (param) {
                 return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, CommonCombinators$ReasonSuperTinyCompiler.whitespace, (function (param) {
-                              return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, Combinators$ReasonSuperTinyCompiler.slice(identifier), (function (iden) {
+                              return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, Combinators$ReasonSuperTinyCompiler.slice(atom), (function (iden) {
                                             return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, CommonCombinators$ReasonSuperTinyCompiler.whitespace, (function (param) {
                                                           var tag = expr.tag | 0;
                                                           var expr$1 = tag === 250 ? expr[0] : (
@@ -104,7 +106,7 @@ exports.trueBool = trueBool;
 exports.falseBool = falseBool;
 exports.quotedString = quotedString;
 exports.number = number;
-exports.identifier = identifier;
+exports.atom = atom;
 exports.literal = literal;
 exports.openParen = openParen;
 exports.closeParen = closeParen;

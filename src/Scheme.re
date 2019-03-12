@@ -2,7 +2,7 @@ open Combinators
 open CommonCombinators
 
 type scheme =
-    | Identifier(string)
+    | Atom(string)
     | Number(float)
     | String(string)
     | True
@@ -14,7 +14,7 @@ let trueBool = string("#t") <$> _ => True
 let falseBool = string("#f") <$> _ => False
 let quotedString = str <$> s => String(s)
 let number = number <$> numberStr => Number(float_of_string(numberStr))
-let identifier = regex("[^()][\S#]*") |> slice
+let atom = regex("[^()][\S#]*") |> slice <$> v => Atom(v)
 let literal = 
     trueBool <|> 
     lazy falseBool <|>
@@ -28,7 +28,7 @@ let listR = expr => sepBy(whitespace, expr)
 let procedureCallR = expr => 
     openParen >>= _ =>
     whitespace >>= _ =>
-    identifier |> slice >>= iden =>
+    atom |> slice >>= iden =>
     whitespace >>= _ =>
     listR(Lazy.force(expr)) >>= value =>
     whitespace >>= _ =>
