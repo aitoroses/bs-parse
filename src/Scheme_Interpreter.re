@@ -1,5 +1,4 @@
-open Scheme;
-open Combinators;
+open Scheme_Parser;
 
 let rec showVal = lisp => switch(lisp) {
 | Atom(name) => name
@@ -36,15 +35,3 @@ let rec eval = lisp => switch(lisp) {
     }
 | x => x
 }
-
-let code = "(if #t (+ 1 2) (- 3 2))"
-
-let program = code |> run(Scheme.expr) |> get_exn
-
-Js.log(showVal(program))
-
-let result = try(eval(program)) {
-| RuntimeError(msg) => String((msg))
-}
-
-Js.log(showVal(result))

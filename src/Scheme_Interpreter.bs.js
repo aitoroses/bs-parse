@@ -5,9 +5,6 @@ var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var Pervasives = require("bs-platform/lib/js/pervasives.js");
 var Caml_exceptions = require("bs-platform/lib/js/caml_exceptions.js");
-var Caml_js_exceptions = require("bs-platform/lib/js/caml_js_exceptions.js");
-var Scheme$ReasonSuperTinyCompiler = require("./Scheme.bs.js");
-var Combinators$ReasonSuperTinyCompiler = require("./Combinators.bs.js");
 
 function showVal(lisp) {
   if (typeof lisp === "number") {
@@ -33,7 +30,7 @@ function showVal(lisp) {
   }
 }
 
-var RuntimeError = Caml_exceptions.create("SchemeInterpreter-ReasonSuperTinyCompiler.RuntimeError");
+var RuntimeError = Caml_exceptions.create("Scheme_Interpreter-ReasonSuperTinyCompiler.RuntimeError");
 
 function binNumOp(impl, params) {
   var exit = 0;
@@ -133,34 +130,9 @@ function $$eval(lisp) {
   }
 }
 
-var code = "(if #t (+ 1 2) (- 3 2))";
-
-var program = Combinators$ReasonSuperTinyCompiler.get_exn(Combinators$ReasonSuperTinyCompiler.run(Scheme$ReasonSuperTinyCompiler.expr, code));
-
-console.log(showVal(program));
-
-var result;
-
-try {
-  result = $$eval(program);
-}
-catch (raw_exn){
-  var exn = Caml_js_exceptions.internalToOCamlException(raw_exn);
-  if (exn[0] === RuntimeError) {
-    result = /* String */Block.__(2, [exn[1]]);
-  } else {
-    throw exn;
-  }
-}
-
-console.log(showVal(result));
-
 exports.showVal = showVal;
 exports.RuntimeError = RuntimeError;
 exports.binNumOp = binNumOp;
 exports.if_ = if_;
 exports.$$eval = $$eval;
-exports.code = code;
-exports.program = program;
-exports.result = result;
-/* program Not a pure module */
+/* No side effect */

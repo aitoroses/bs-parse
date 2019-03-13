@@ -1,19 +1,8 @@
 
-// open Parser.Parsers;
+let code = "(if #t (+ 1 2) (- 3 2))"
 
-// let parser = orElse(string("abra"), string("cadabra"))
+let result = try(Scheme.eval(code)) {
+| Scheme.Interpreter.RuntimeError(msg) => String((msg))
+}
 
-/*switch(run(parser, "cadabra")) {
-| Ok((result, loc)) =>
-    Js.log({
-        "success": true,
-        "value": result,
-        "line": loc->Location.line,
-        "column": loc -> Location.col
-    })
-| Err(e) =>
-    Js.log({
-        "success": false,
-        "error": Parser.ParseError.toString(e),
-    })
-}*/
+Js.log("The result is: " ++ Scheme.show(result))
