@@ -1,3 +1,4 @@
+let (<<) = (f, g) => x => f(g(x));
 
 type result('a, 'b) =
   | Ok('a)

@@ -1,11 +1,7 @@
+open Util;
 module Parser = Scheme_Parser
 module Interpreter = Scheme_Interpreter
 
-
-let eval = code =>
-    code 
-    |> Combinators.run(Parser.expr) 
-    |> Combinators.get_exn
-    |> Interpreter.eval
-
+let parse = Combinators.run(Parser.expr)
+let eval = Interpreter.eval << Combinators.get_exn << parse
 let show = Interpreter.showVal

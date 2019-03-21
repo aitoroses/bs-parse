@@ -2,8 +2,13 @@
 'use strict';
 
 var List = require("bs-platform/lib/js/list.js");
+var Curry = require("bs-platform/lib/js/curry.js");
 var $$String = require("bs-platform/lib/js/string.js");
 var Caml_string = require("bs-platform/lib/js/caml_string.js");
+
+function $less$less(f, g, x) {
+  return Curry._1(f, Curry._1(g, x));
+}
 
 function explode(str) {
   var _i = str.length - 1 | 0;
@@ -50,6 +55,7 @@ function take(n, list) {
   }
 }
 
+exports.$less$less = $less$less;
 exports.explode = explode;
 exports.char_to_string = char_to_string;
 exports.char_list_to_string = char_list_to_string;
