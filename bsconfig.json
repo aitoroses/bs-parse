@@ -12,7 +12,7 @@
     "type": "dev"
   }],
   "package-specs": {
-    "module": "commonjs",
+    "module": "es6-global",
     "in-source": true
   },
   "suffix": ".bs.js",

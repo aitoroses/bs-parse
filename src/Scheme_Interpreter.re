@@ -2,7 +2,7 @@ open Scheme_Parser;
 
 let rec showVal = lisp => switch(lisp) {
 | Atom(name) => name
-| Number(content) => string_of_float(content)
+| Number(content) => Js.Float.toString(content)
 | String(contents) => "\"" ++ contents ++ "\""
 | True => "#t"
 | False => "#f"

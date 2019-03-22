@@ -131,9 +131,9 @@ module BasicCombinators: Parsers = { // bind equation to externally treat it lik
   let regex = regexpr => Parser(loc => {
     let reg = Js.Re.fromString("^" ++ regexpr)
     let sstr = Js.String.substr(~from=loc.offset, loc.input)
-    if (Js.Re.test(sstr, reg)) {
-      let result = sstr
-        ->Js.Re.exec(reg)
+    if (reg->Js.Re.test_(sstr)) {
+      let result = reg
+        ->Js.Re.exec_(sstr)
         ->Belt.Option.getExn
         ->Js.Re.captures
         |> Array.map(x => Js.Nullable.toOption(x) |> Belt.Option.getExn)
