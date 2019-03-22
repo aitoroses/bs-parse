@@ -5,9 +5,9 @@ import { uglify } from "rollup-plugin-uglify"
 
 
 export default {
-  input: 'src/Scheme.bs.js',
+  input: 'src/Main.bs.js',
   output: {
-    file: 'dist/Scheme.js',
+    file: 'dist/build.js',
     format: 'cjs',
     exports: 'named'
   },
@@ -16,24 +16,15 @@ export default {
       jsnext: false,
       main: true
     }),
-
     commonjs({
-
-      // if false then skip sourceMap generation for CommonJS modules
-      sourceMap: false,  // Default: true
-
-      // sometimes you have to leave require statements
-      // unconverted. Pass an array containing the IDs
-      // or a `id => boolean` function. Only use this
-      // option if you know what you're doing!
-      ignore: [ 'conditional-runtime-dependency' ]
+      sourceMap: false,
     }),
     uglify({
-        compress: true,
-        mangle: {
-          toplevel: true,
-          //properties: true
-        }
+      compress: true,
+      mangle: {
+        toplevel: true,
+        //properties: true
+      }
     })
   ]
 };

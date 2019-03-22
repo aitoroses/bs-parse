@@ -6,15 +6,15 @@ import * as Curry from "../node_modules/bs-platform/lib/es6/curry.js";
 import * as Caml_array from "../node_modules/bs-platform/lib/es6/caml_array.js";
 import * as Belt_Option from "../node_modules/bs-platform/lib/es6/belt_Option.js";
 import * as Caml_option from "../node_modules/bs-platform/lib/es6/caml_option.js";
+import * as Parser$BsParse from "./Parser.bs.js";
 import * as Caml_exceptions from "../node_modules/bs-platform/lib/es6/caml_exceptions.js";
 import * as CamlinternalLazy from "../node_modules/bs-platform/lib/es6/camlinternalLazy.js";
-import * as Parser$ReasonSuperTinyCompiler from "./Parser.bs.js";
-import * as Location$ReasonSuperTinyCompiler from "./Location.bs.js";
-import * as ParseError$ReasonSuperTinyCompiler from "./ParseError.bs.js";
+import * as Location$BsParse from "./Location.bs.js";
+import * as ParseError$BsParse from "./ParseError.bs.js";
 
-var CannotGet = Caml_exceptions.create("Combinators-ReasonSuperTinyCompiler.BasicCombinators.CannotGet");
+var CannotGet = Caml_exceptions.create("Combinators-BsParse.BasicCombinators.CannotGet");
 
-var CannotGetError = Caml_exceptions.create("Combinators-ReasonSuperTinyCompiler.BasicCombinators.CannotGetError");
+var CannotGetError = Caml_exceptions.create("Combinators-BsParse.BasicCombinators.CannotGetError");
 
 function get_exn(result) {
   if (result.tag) {
@@ -42,7 +42,7 @@ function runParser(p, loc) {
     case 1 : 
         var ok = Curry._1(p[1], loc);
         if (ok.tag) {
-          return /* Err */Block.__(1, [ParseError$ReasonSuperTinyCompiler.make(loc, p[0])]);
+          return /* Err */Block.__(1, [ParseError$BsParse.make(loc, p[0])]);
         } else {
           return ok;
         }
@@ -53,7 +53,7 @@ function runParser(p, loc) {
 }
 
 function run(parser, input) {
-  var match = runParser(parser, Location$ReasonSuperTinyCompiler.make(input, 0));
+  var match = runParser(parser, Location$BsParse.make(input, 0));
   if (match.tag) {
     return /* Err */Block.__(1, [match[0]]);
   } else {
@@ -75,10 +75,10 @@ function string(str) {
                   var charsConsumed = str.length;
                   return /* Ok */Block.__(0, [/* tuple */[
                               str,
-                              Location$ReasonSuperTinyCompiler.inc(loc, charsConsumed)
+                              Location$BsParse.inc(loc, charsConsumed)
                             ]]);
                 } else {
-                  return /* Err */Block.__(1, [ParseError$ReasonSuperTinyCompiler.make(loc, "Expected: " + str)]);
+                  return /* Err */Block.__(1, [ParseError$BsParse.make(loc, "Expected: " + str)]);
                 }
               })]);
 }
@@ -95,7 +95,7 @@ function orElse(p1, p2) {
                     var error2 = ok$1[0];
                     var stack = error2[/* stack */0];
                     var otherFailures = $$Array.append(/* array */[ok[0]], error2[/* otherFailures */1]);
-                    return /* Err */Block.__(1, [ParseError$ReasonSuperTinyCompiler.makeWith(stack, otherFailures)]);
+                    return /* Err */Block.__(1, [ParseError$BsParse.makeWith(stack, otherFailures)]);
                   } else {
                     return ok$1;
                   }
@@ -202,7 +202,7 @@ function many1(p) {
                   var loc$1 = match[1];
                   var v = match[0];
                   if (v.length === 0) {
-                    return /* Err */Block.__(1, [ParseError$ReasonSuperTinyCompiler.make(loc$1, "Expected at least one repetition for parser")]);
+                    return /* Err */Block.__(1, [ParseError$BsParse.make(loc$1, "Expected at least one repetition for parser")]);
                   } else {
                     return /* Ok */Block.__(0, [/* tuple */[
                                 v,
@@ -254,7 +254,7 @@ function regex(regexpr) {
                               newLoc
                             ]]);
                 } else {
-                  return /* Err */Block.__(1, [ParseError$ReasonSuperTinyCompiler.make(loc, "Expected: " + regexpr)]);
+                  return /* Err */Block.__(1, [ParseError$BsParse.make(loc, "Expected: " + regexpr)]);
                 }
               })]);
 }
@@ -353,7 +353,7 @@ function attempt(p) {
 
 function fail(error) {
   return /* Parser */Block.__(2, [(function (loc) {
-                return /* Err */Block.__(1, [ParseError$ReasonSuperTinyCompiler.make(loc, error)]);
+                return /* Err */Block.__(1, [ParseError$BsParse.make(loc, error)]);
               })]);
 }
 
@@ -377,9 +377,9 @@ var BasicCombinators = /* module */[
   /* fail */fail
 ];
 
-var DP = Parser$ReasonSuperTinyCompiler.DerivedParsers(BasicCombinators);
+var DP = Parser$BsParse.DerivedParsers(BasicCombinators);
 
-var Ops = Parser$ReasonSuperTinyCompiler.InfixOps(BasicCombinators);
+var Ops = Parser$BsParse.InfixOps(BasicCombinators);
 
 var map = DP[0];
 

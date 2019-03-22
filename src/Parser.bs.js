@@ -2,8 +2,8 @@
 
 import * as Curry from "../node_modules/bs-platform/lib/es6/curry.js";
 import * as Caml_string from "../node_modules/bs-platform/lib/es6/caml_string.js";
+import * as Util$BsParse from "./Util.bs.js";
 import * as CamlinternalLazy from "../node_modules/bs-platform/lib/es6/camlinternalLazy.js";
-import * as Util$ReasonSuperTinyCompiler from "./Util.bs.js";
 
 function DerivedParsers(PS) {
   var map = function (parser, fn) {
@@ -30,7 +30,7 @@ function DerivedParsers(PS) {
                 }));
   };
   var $$char = function (c) {
-    return map(Curry._1(PS[/* string */3], Util$ReasonSuperTinyCompiler.char_to_string(c)), (function (s) {
+    return map(Curry._1(PS[/* string */3], Util$BsParse.char_to_string(c)), (function (s) {
                   return Caml_string.get(s, 0);
                 }));
   };
@@ -67,7 +67,7 @@ function InfixOps(PS) {
                 }));
   };
   var $$char = function (c) {
-    return map(Curry._1(PS[/* string */3], Util$ReasonSuperTinyCompiler.char_to_string(c)), (function (s) {
+    return map(Curry._1(PS[/* string */3], Util$BsParse.char_to_string(c)), (function (s) {
                   return Caml_string.get(s, 0);
                 }));
   };

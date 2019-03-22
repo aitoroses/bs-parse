@@ -6,40 +6,40 @@ import * as Caml_obj from "../node_modules/bs-platform/lib/es6/caml_obj.js";
 import * as Caml_array from "../node_modules/bs-platform/lib/es6/caml_array.js";
 import * as Caml_format from "../node_modules/bs-platform/lib/es6/caml_format.js";
 import * as CamlinternalLazy from "../node_modules/bs-platform/lib/es6/camlinternalLazy.js";
-import * as Combinators$ReasonSuperTinyCompiler from "./Combinators.bs.js";
-import * as CommonCombinators$ReasonSuperTinyCompiler from "./CommonCombinators.bs.js";
+import * as Combinators$BsParse from "./Combinators.bs.js";
+import * as CommonCombinators$BsParse from "./CommonCombinators.bs.js";
 
-var $$undefined = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.string("undefined"), (function (param) {
+var $$undefined = Curry._2(Combinators$BsParse.$less$$great, Combinators$BsParse.string("undefined"), (function (param) {
         return /* JUndefined */0;
       }));
 
-var $$null = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.string("null"), (function (param) {
+var $$null = Curry._2(Combinators$BsParse.$less$$great, Combinators$BsParse.string("null"), (function (param) {
         return /* JNull */1;
       }));
 
-var trueBool = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.string("true"), (function (param) {
+var trueBool = Curry._2(Combinators$BsParse.$less$$great, Combinators$BsParse.string("true"), (function (param) {
         return /* JBool */Block.__(2, [true]);
       }));
 
-var falseBool = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.string("false"), (function (param) {
+var falseBool = Curry._2(Combinators$BsParse.$less$$great, Combinators$BsParse.string("false"), (function (param) {
         return /* JBool */Block.__(2, [false]);
       }));
 
-var bools = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, trueBool, Block.__(250, [falseBool]));
+var bools = Curry._2(Combinators$BsParse.$less$pipe$great, trueBool, Block.__(250, [falseBool]));
 
-var quotedString = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.str, (function (s) {
+var quotedString = Curry._2(Combinators$BsParse.$less$$great, CommonCombinators$BsParse.str, (function (s) {
         return /* JString */Block.__(1, [s]);
       }));
 
-var number = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.number, (function (numberStr) {
+var number = Curry._2(Combinators$BsParse.$less$$great, CommonCombinators$BsParse.number, (function (numberStr) {
         return /* JNumber */Block.__(0, [Caml_format.caml_float_of_string(numberStr)]);
       }));
 
-var literal = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, $$undefined, Block.__(250, [$$null])), Block.__(250, [bools])), Block.__(250, [quotedString])), Block.__(250, [number]));
+var literal = Curry._2(Combinators$BsParse.$less$pipe$great, Curry._2(Combinators$BsParse.$less$pipe$great, Curry._2(Combinators$BsParse.$less$pipe$great, Curry._2(Combinators$BsParse.$less$pipe$great, $$undefined, Block.__(250, [$$null])), Block.__(250, [bools])), Block.__(250, [quotedString])), Block.__(250, [number]));
 
 function objectMemberP(expr) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, Combinators$ReasonSuperTinyCompiler.regex("\"([^\"]*)\"\\s*:\\s*"), (function (captured) {
-                return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, expr, (function (value) {
+  return Curry._2(Combinators$BsParse.$great$great$eq, Combinators$BsParse.regex("\"([^\"]*)\"\\s*:\\s*"), (function (captured) {
+                return Curry._2(Combinators$BsParse.$less$$great, expr, (function (value) {
                               var key = Caml_array.caml_array_get(captured, 1);
                               return /* tuple */[
                                       key,
@@ -50,13 +50,13 @@ function objectMemberP(expr) {
 }
 
 function objP(expr) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.surround(Combinators$ReasonSuperTinyCompiler.string("{"), Combinators$ReasonSuperTinyCompiler.sepBy(Combinators$ReasonSuperTinyCompiler.string(","), CommonCombinators$ReasonSuperTinyCompiler.spaceAround(objectMemberP(expr))), Combinators$ReasonSuperTinyCompiler.string("}")), (function (res) {
+  return Curry._2(Combinators$BsParse.$less$$great, CommonCombinators$BsParse.surround(Combinators$BsParse.string("{"), Combinators$BsParse.sepBy(Combinators$BsParse.string(","), CommonCombinators$BsParse.spaceAround(objectMemberP(expr))), Combinators$BsParse.string("}")), (function (res) {
                 return /* JObject */Block.__(4, [res]);
               }));
 }
 
 function arrayP(expr) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.surround(Combinators$ReasonSuperTinyCompiler.string("["), Combinators$ReasonSuperTinyCompiler.sepBy(Combinators$ReasonSuperTinyCompiler.string(","), CommonCombinators$ReasonSuperTinyCompiler.spaceAround(expr)), Combinators$ReasonSuperTinyCompiler.string("]")), (function (res) {
+  return Curry._2(Combinators$BsParse.$less$$great, CommonCombinators$BsParse.surround(Combinators$BsParse.string("["), Combinators$BsParse.sepBy(Combinators$BsParse.string(","), CommonCombinators$BsParse.spaceAround(expr)), Combinators$BsParse.string("]")), (function (res) {
                 return /* JArray */Block.__(3, [res]);
               }));
 }
@@ -64,7 +64,7 @@ function arrayP(expr) {
 var expr = [];
 
 Caml_obj.caml_update_dummy(expr, Block.__(246, [(function (param) {
-            return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, literal, Block.__(246, [(function (param) {
+            return Curry._2(Combinators$BsParse.$less$pipe$great, Curry._2(Combinators$BsParse.$less$pipe$great, literal, Block.__(246, [(function (param) {
                                   var tag = expr.tag | 0;
                                   return objP(tag === 250 ? expr[0] : (
                                                 tag === 246 ? CamlinternalLazy.force_lazy_block(expr) : expr

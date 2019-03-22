@@ -2,7 +2,7 @@
 
 import * as List from "../node_modules/bs-platform/lib/es6/list.js";
 import * as $$String from "../node_modules/bs-platform/lib/es6/string.js";
-import * as Util$ReasonSuperTinyCompiler from "./Util.bs.js";
+import * as Util$BsParse from "./Util.bs.js";
 
 function make(input, offset) {
   return /* record */[
@@ -19,7 +19,7 @@ function line(loc) {
                   } else {
                     return acc;
                   }
-                }), 0, Util$ReasonSuperTinyCompiler.explode(str));
+                }), 0, Util$BsParse.explode(str));
   };
   return countBreaks($$String.sub(loc[/* input */0], 0, loc[/* offset */1] + 1 | 0)) + 1 | 0;
 }

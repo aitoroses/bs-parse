@@ -5,51 +5,51 @@ import * as Curry from "../node_modules/bs-platform/lib/es6/curry.js";
 import * as Caml_obj from "../node_modules/bs-platform/lib/es6/caml_obj.js";
 import * as Caml_format from "../node_modules/bs-platform/lib/es6/caml_format.js";
 import * as CamlinternalLazy from "../node_modules/bs-platform/lib/es6/camlinternalLazy.js";
-import * as Combinators$ReasonSuperTinyCompiler from "./Combinators.bs.js";
-import * as CommonCombinators$ReasonSuperTinyCompiler from "./CommonCombinators.bs.js";
+import * as Combinators$BsParse from "./Combinators.bs.js";
+import * as CommonCombinators$BsParse from "./CommonCombinators.bs.js";
 
-var trueBool = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.string("#t"), (function (param) {
+var trueBool = Curry._2(Combinators$BsParse.$less$$great, Combinators$BsParse.string("#t"), (function (param) {
         return /* True */0;
       }));
 
-var falseBool = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.string("#f"), (function (param) {
+var falseBool = Curry._2(Combinators$BsParse.$less$$great, Combinators$BsParse.string("#f"), (function (param) {
         return /* False */1;
       }));
 
-var quotedString = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.str, (function (s) {
+var quotedString = Curry._2(Combinators$BsParse.$less$$great, CommonCombinators$BsParse.str, (function (s) {
         return /* String */Block.__(2, [s]);
       }));
 
-var number = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.number, (function (numberStr) {
+var number = Curry._2(Combinators$BsParse.$less$$great, CommonCombinators$BsParse.number, (function (numberStr) {
         return /* Number */Block.__(1, [Caml_format.caml_float_of_string(numberStr)]);
       }));
 
-var atom = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.slice(Combinators$ReasonSuperTinyCompiler.regex("[^()][\\S#]*")), (function (v) {
+var atom = Curry._2(Combinators$BsParse.$less$$great, Combinators$BsParse.slice(Combinators$BsParse.regex("[^()][\\S#]*")), (function (v) {
         return /* Atom */Block.__(0, [v]);
       }));
 
-var literal = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, trueBool, Block.__(250, [falseBool])), Block.__(250, [quotedString])), Block.__(250, [number]));
+var literal = Curry._2(Combinators$BsParse.$less$pipe$great, Curry._2(Combinators$BsParse.$less$pipe$great, Curry._2(Combinators$BsParse.$less$pipe$great, trueBool, Block.__(250, [falseBool])), Block.__(250, [quotedString])), Block.__(250, [number]));
 
-var openParen = Combinators$ReasonSuperTinyCompiler.string("(");
+var openParen = Combinators$BsParse.string("(");
 
-var closeParen = Combinators$ReasonSuperTinyCompiler.string(")");
+var closeParen = Combinators$BsParse.string(")");
 
 function listR(expr) {
-  return Combinators$ReasonSuperTinyCompiler.sepBy(CommonCombinators$ReasonSuperTinyCompiler.whitespace, expr);
+  return Combinators$BsParse.sepBy(CommonCombinators$BsParse.whitespace, expr);
 }
 
 function procedureCallR(expr) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, openParen, (function (param) {
-                return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, CommonCombinators$ReasonSuperTinyCompiler.whitespace, (function (param) {
-                              return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, Combinators$ReasonSuperTinyCompiler.slice(atom), (function (iden) {
-                                            return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, CommonCombinators$ReasonSuperTinyCompiler.whitespace, (function (param) {
+  return Curry._2(Combinators$BsParse.$great$great$eq, openParen, (function (param) {
+                return Curry._2(Combinators$BsParse.$great$great$eq, CommonCombinators$BsParse.whitespace, (function (param) {
+                              return Curry._2(Combinators$BsParse.$great$great$eq, Combinators$BsParse.slice(atom), (function (iden) {
+                                            return Curry._2(Combinators$BsParse.$great$great$eq, CommonCombinators$BsParse.whitespace, (function (param) {
                                                           var tag = expr.tag | 0;
                                                           var expr$1 = tag === 250 ? expr[0] : (
                                                               tag === 246 ? CamlinternalLazy.force_lazy_block(expr) : expr
                                                             );
-                                                          return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, Combinators$ReasonSuperTinyCompiler.sepBy(CommonCombinators$ReasonSuperTinyCompiler.whitespace, expr$1), (function (value) {
-                                                                        return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, CommonCombinators$ReasonSuperTinyCompiler.whitespace, (function (param) {
-                                                                                      return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, closeParen, (function (param) {
+                                                          return Curry._2(Combinators$BsParse.$great$great$eq, Combinators$BsParse.sepBy(CommonCombinators$BsParse.whitespace, expr$1), (function (value) {
+                                                                        return Curry._2(Combinators$BsParse.$great$great$eq, CommonCombinators$BsParse.whitespace, (function (param) {
+                                                                                      return Curry._2(Combinators$BsParse.$less$$great, closeParen, (function (param) {
                                                                                                     return /* ProcedureCall */Block.__(4, [
                                                                                                               iden,
                                                                                                               value
@@ -64,15 +64,15 @@ function procedureCallR(expr) {
 }
 
 function surroundedListR(expr) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, openParen, (function (param) {
-                return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, CommonCombinators$ReasonSuperTinyCompiler.whitespace, (function (param) {
+  return Curry._2(Combinators$BsParse.$great$great$eq, openParen, (function (param) {
+                return Curry._2(Combinators$BsParse.$great$great$eq, CommonCombinators$BsParse.whitespace, (function (param) {
                               var tag = expr.tag | 0;
                               var expr$1 = tag === 250 ? expr[0] : (
                                   tag === 246 ? CamlinternalLazy.force_lazy_block(expr) : expr
                                 );
-                              return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, Combinators$ReasonSuperTinyCompiler.sepBy(CommonCombinators$ReasonSuperTinyCompiler.whitespace, expr$1), (function (value) {
-                                            return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, CommonCombinators$ReasonSuperTinyCompiler.whitespace, (function (param) {
-                                                          return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, closeParen, (function (param) {
+                              return Curry._2(Combinators$BsParse.$great$great$eq, Combinators$BsParse.sepBy(CommonCombinators$BsParse.whitespace, expr$1), (function (value) {
+                                            return Curry._2(Combinators$BsParse.$great$great$eq, CommonCombinators$BsParse.whitespace, (function (param) {
+                                                          return Curry._2(Combinators$BsParse.$less$$great, closeParen, (function (param) {
                                                                         return /* List */Block.__(3, [value]);
                                                                       }));
                                                         }));
@@ -84,7 +84,7 @@ function surroundedListR(expr) {
 var exprR = [];
 
 Caml_obj.caml_update_dummy(exprR, Block.__(246, [(function (param) {
-            return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, Curry._2(Combinators$ReasonSuperTinyCompiler.$less$pipe$great, literal, Block.__(246, [(function (param) {
+            return Curry._2(Combinators$BsParse.$less$pipe$great, Curry._2(Combinators$BsParse.$less$pipe$great, literal, Block.__(246, [(function (param) {
                                   return procedureCallR(exprR);
                                 })])), Block.__(246, [(function (param) {
                               return surroundedListR(exprR);
@@ -93,10 +93,10 @@ Caml_obj.caml_update_dummy(exprR, Block.__(246, [(function (param) {
 
 var tag = exprR.tag | 0;
 
-var expr = Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, CommonCombinators$ReasonSuperTinyCompiler.spaceAround(tag === 250 ? exprR[0] : (
+var expr = Curry._2(Combinators$BsParse.$great$great$eq, CommonCombinators$BsParse.spaceAround(tag === 250 ? exprR[0] : (
             tag === 246 ? CamlinternalLazy.force_lazy_block(exprR) : exprR
           )), (function (value) {
-        return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, CommonCombinators$ReasonSuperTinyCompiler.eof, (function (param) {
+        return Curry._2(Combinators$BsParse.$less$$great, CommonCombinators$BsParse.eof, (function (param) {
                       return value;
                     }));
       }));

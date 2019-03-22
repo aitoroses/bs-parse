@@ -2,20 +2,20 @@
 
 import * as Curry from "../node_modules/bs-platform/lib/es6/curry.js";
 import * as Caml_array from "../node_modules/bs-platform/lib/es6/caml_array.js";
-import * as Combinators$ReasonSuperTinyCompiler from "./Combinators.bs.js";
+import * as Combinators$BsParse from "./Combinators.bs.js";
 
-var eof = Combinators$ReasonSuperTinyCompiler.label("Expected EOF", Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.slice(Combinators$ReasonSuperTinyCompiler.regex("$")), (function (param) {
+var eof = Combinators$BsParse.label("Expected EOF", Curry._2(Combinators$BsParse.$less$$great, Combinators$BsParse.slice(Combinators$BsParse.regex("$")), (function (param) {
             return /* () */0;
           })));
 
-var whitespace = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.slice(Combinators$ReasonSuperTinyCompiler.regex("[\\s]*")), (function (param) {
+var whitespace = Curry._2(Combinators$BsParse.$less$$great, Combinators$BsParse.slice(Combinators$BsParse.regex("[\\s]*")), (function (param) {
         return /* () */0;
       }));
 
 function spaceAround(bodyP) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, whitespace, (function (param) {
-                return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, bodyP, (function (result) {
-                              return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, whitespace, (function (param) {
+  return Curry._2(Combinators$BsParse.$great$great$eq, whitespace, (function (param) {
+                return Curry._2(Combinators$BsParse.$great$great$eq, bodyP, (function (result) {
+                              return Curry._2(Combinators$BsParse.$less$$great, whitespace, (function (param) {
                                             return result;
                                           }));
                             }));
@@ -23,18 +23,18 @@ function spaceAround(bodyP) {
 }
 
 function surround(openP, bodyP, closeP) {
-  return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, openP, (function (param) {
-                return Curry._2(Combinators$ReasonSuperTinyCompiler.$great$great$eq, spaceAround(bodyP), (function (result) {
-                              return Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, closeP, (function (param) {
+  return Curry._2(Combinators$BsParse.$great$great$eq, openP, (function (param) {
+                return Curry._2(Combinators$BsParse.$great$great$eq, spaceAround(bodyP), (function (result) {
+                              return Curry._2(Combinators$BsParse.$less$$great, closeP, (function (param) {
                                             return result;
                                           }));
                             }));
               }));
 }
 
-var number = Combinators$ReasonSuperTinyCompiler.slice(Combinators$ReasonSuperTinyCompiler.regex("-?\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?"));
+var number = Combinators$BsParse.slice(Combinators$BsParse.regex("-?\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?"));
 
-var str = Curry._2(Combinators$ReasonSuperTinyCompiler.$less$$great, Combinators$ReasonSuperTinyCompiler.regex("\"([^\"]*)\""), (function (matches) {
+var str = Curry._2(Combinators$BsParse.$less$$great, Combinators$BsParse.regex("\"([^\"]*)\""), (function (matches) {
         return Caml_array.caml_array_get(matches, 1);
       }));
 

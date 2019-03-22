@@ -28,7 +28,7 @@ function showVal(lisp) {
   }
 }
 
-var RuntimeError = Caml_exceptions.create("Scheme_Interpreter-ReasonSuperTinyCompiler.RuntimeError");
+var RuntimeError = Caml_exceptions.create("Scheme_Interpreter-BsParse.RuntimeError");
 
 function binNumOp(impl, params) {
   var exit = 0;

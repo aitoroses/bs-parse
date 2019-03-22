@@ -1,8 +1,9 @@
 {
-  "name": "reason-super-tiny-compiler",
-  "version": "0.1.0",
+  "name": "bs-parse",
+  "version": "1.0.0",
+  "main": "dist/build.js",
   "scripts": {
-    "build": "bsb -make-world && rollup -c rollup.config.js && gzip -c dist/Scheme.js | wc -c",
+    "build": "bsb -make-world && rollup -c rollup.config.js && gzip -c dist/build.js | wc -c",
     "start": "bsb -make-world -w",
     "test": "jest --watch",
     "clean": "bsb -clean-world"
