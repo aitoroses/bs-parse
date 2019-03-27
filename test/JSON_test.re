@@ -235,4 +235,60 @@ describe("JSON parser", () => {
         })
     })
 
+    describe("show", () => {
+        test("empty object", () => {
+            let json = {|{}|}
+            let result = run(JSON.obj, json)
+            expect(result |> get_exn |> JSON.show) == json
+        })
+
+        test("one member object", () => {
+            let json = {|{"hello":"world"}|}
+            let result = run(JSON.obj, json)
+            expect(result |> get_exn |> JSON.show) == json
+        })
+
+        test("one member object 2", () => {
+            let json = {|{"one":1}|}
+            let result = run(JSON.obj, json)
+            expect(result |> get_exn |> JSON.show) == json
+        })
+
+        test("two member object", () => {
+            let json = {|{"hello":"world","one":1}|}
+            let result = run(JSON.obj, json)
+            expect(result |> get_exn |> JSON.show) == json
+        })
+
+        test("two member withObject", () => {
+            let json = {|{"hello":"world","one":1}|}
+            let result = run(JSON.obj, json)
+            expect(result |> get_exn |> JSON.show) == json
+        })
+
+        test("multiple keys", () => {
+            let json = {|{"Company name":"Microsoft Corporation","Ticker":"MSFT","Active":true,"Price":30.66,"Shares outstanding":8}|}
+            let result = run(JSON.obj, json)
+            expect(result |> get_exn |> JSON.show) == json
+        })
+
+        test("nexted array", () => {
+            let json = {|{"obj":[1,2]}|}
+            let result = run(JSON.obj, json)
+            expect(result |> get_exn |> JSON.show) == json
+        })
+
+        test("nested empty object", () => {
+            let json = {|{"obj":{}}|}
+            let result = run(JSON.obj, json)
+            expect(result |> get_exn |> JSON.show) == json
+        })
+
+        test("nested empty object with data", () => {
+            let json = {|{"obj":{"hello":"world"}}|}
+            let result = run(JSON.obj, json)
+            expect(result |> get_exn |> JSON.show) == json
+        })
+    })
+
 })

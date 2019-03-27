@@ -94,109 +94,156 @@ Jest.describe("JSON parser", (function (param) {
                                             ]]));
                             }));
               }));
-        return Jest.describe("object", (function (param) {
-                      Jest.test("empty object", (function (param) {
-                              var result = Combinators$BsParse.run(JSON$BsParse.obj, "{}");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[]]));
-                            }));
-                      Jest.test("member expression", (function (param) {
-                              var result = Combinators$BsParse.run(JSON$BsParse.objectMember, "\"hello\" : \"world\"");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* tuple */[
+        Jest.describe("object", (function (param) {
+                Jest.test("empty object", (function (param) {
+                        var result = Combinators$BsParse.run(JSON$BsParse.obj, "{}");
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[]]));
+                      }));
+                Jest.test("member expression", (function (param) {
+                        var result = Combinators$BsParse.run(JSON$BsParse.objectMember, "\"hello\" : \"world\"");
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* tuple */[
+                                    "hello",
+                                    /* JString */Block.__(1, ["world"])
+                                  ]);
+                      }));
+                Jest.test("one member object", (function (param) {
+                        var result = Combinators$BsParse.run(JSON$BsParse.obj, "{ \"hello\" : \"world\" }");
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
                                           "hello",
                                           /* JString */Block.__(1, ["world"])
-                                        ]);
+                                        ]]]));
+                      }));
+                Jest.test("one member object 2", (function (param) {
+                        var result = Combinators$BsParse.run(JSON$BsParse.obj, "{ \"one\": 1 }");
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
+                                          "one",
+                                          /* JNumber */Block.__(0, [1.0])
+                                        ]]]));
+                      }));
+                Jest.test("two member object", (function (param) {
+                        var result = Combinators$BsParse.run(JSON$BsParse.obj, "{ \"hello\" : \"world\", \"one\": 1 }");
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[
+                                        /* tuple */[
+                                          "hello",
+                                          /* JString */Block.__(1, ["world"])
+                                        ],
+                                        /* tuple */[
+                                          "one",
+                                          /* JNumber */Block.__(0, [1.0])
+                                        ]
+                                      ]]));
+                      }));
+                Jest.test("two member withObject", (function (param) {
+                        var result = Combinators$BsParse.run(JSON$BsParse.obj, "{ \"hello\" : \"world\", \"one\": 1 }");
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[
+                                        /* tuple */[
+                                          "hello",
+                                          /* JString */Block.__(1, ["world"])
+                                        ],
+                                        /* tuple */[
+                                          "one",
+                                          /* JNumber */Block.__(0, [1.0])
+                                        ]
+                                      ]]));
+                      }));
+                Jest.test("multiple keys", (function (param) {
+                        var result = Combinators$BsParse.run(JSON$BsParse.obj, "{\n                \"Company name\" : \"Microsoft Corporation\",\n                \"Ticker\"  : \"MSFT\",\n                \"Active\"  : true,\n                \"Price\"   : 30.66,\n                \"Shares outstanding\" : 8\n            }");
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[
+                                        /* tuple */[
+                                          "Company name",
+                                          /* JString */Block.__(1, ["Microsoft Corporation"])
+                                        ],
+                                        /* tuple */[
+                                          "Ticker",
+                                          /* JString */Block.__(1, ["MSFT"])
+                                        ],
+                                        /* tuple */[
+                                          "Active",
+                                          /* JBool */Block.__(2, [true])
+                                        ],
+                                        /* tuple */[
+                                          "Price",
+                                          /* JNumber */Block.__(0, [30.66])
+                                        ],
+                                        /* tuple */[
+                                          "Shares outstanding",
+                                          /* JNumber */Block.__(0, [8.0])
+                                        ]
+                                      ]]));
+                      }));
+                Jest.test("nexted array", (function (param) {
+                        var result = Combinators$BsParse.run(JSON$BsParse.obj, "{\n                \"obj\": [1, 2]\n            }");
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
+                                          "obj",
+                                          /* JArray */Block.__(3, [/* array */[
+                                                /* JNumber */Block.__(0, [1.0]),
+                                                /* JNumber */Block.__(0, [2.0])
+                                              ]])
+                                        ]]]));
+                      }));
+                Jest.test("nested empty object", (function (param) {
+                        var result = Combinators$BsParse.run(JSON$BsParse.obj, "{\n                \"obj\": {}\n            }");
+                        return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
+                                          "obj",
+                                          /* JObject */Block.__(4, [/* array */[]])
+                                        ]]]));
+                      }));
+                return Jest.test("nested empty object with data", (function (param) {
+                              var result = Combinators$BsParse.run(JSON$BsParse.obj, "{\n                \"obj\": {\n                    \"hello\": \"world\"\n                }\n            }");
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
+                                                "obj",
+                                                /* JObject */Block.__(4, [/* array */[/* tuple */[
+                                                        "hello",
+                                                        /* JString */Block.__(1, ["world"])
+                                                      ]]])
+                                              ]]]));
+                            }));
+              }));
+        return Jest.describe("show", (function (param) {
+                      Jest.test("empty object", (function (param) {
+                              var json = "{}";
+                              var result = Combinators$BsParse.run(JSON$BsParse.obj, json);
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](JSON$BsParse.show(Combinators$BsParse.get_exn(result))), json);
                             }));
                       Jest.test("one member object", (function (param) {
-                              var result = Combinators$BsParse.run(JSON$BsParse.obj, "{ \"hello\" : \"world\" }");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
-                                                "hello",
-                                                /* JString */Block.__(1, ["world"])
-                                              ]]]));
+                              var json = "{\"hello\":\"world\"}";
+                              var result = Combinators$BsParse.run(JSON$BsParse.obj, json);
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](JSON$BsParse.show(Combinators$BsParse.get_exn(result))), json);
                             }));
                       Jest.test("one member object 2", (function (param) {
-                              var result = Combinators$BsParse.run(JSON$BsParse.obj, "{ \"one\": 1 }");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
-                                                "one",
-                                                /* JNumber */Block.__(0, [1.0])
-                                              ]]]));
+                              var json = "{\"one\":1}";
+                              var result = Combinators$BsParse.run(JSON$BsParse.obj, json);
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](JSON$BsParse.show(Combinators$BsParse.get_exn(result))), json);
                             }));
                       Jest.test("two member object", (function (param) {
-                              var result = Combinators$BsParse.run(JSON$BsParse.obj, "{ \"hello\" : \"world\", \"one\": 1 }");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[
-                                              /* tuple */[
-                                                "hello",
-                                                /* JString */Block.__(1, ["world"])
-                                              ],
-                                              /* tuple */[
-                                                "one",
-                                                /* JNumber */Block.__(0, [1.0])
-                                              ]
-                                            ]]));
+                              var json = "{\"hello\":\"world\",\"one\":1}";
+                              var result = Combinators$BsParse.run(JSON$BsParse.obj, json);
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](JSON$BsParse.show(Combinators$BsParse.get_exn(result))), json);
                             }));
                       Jest.test("two member withObject", (function (param) {
-                              var result = Combinators$BsParse.run(JSON$BsParse.obj, "{ \"hello\" : \"world\", \"one\": 1 }");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[
-                                              /* tuple */[
-                                                "hello",
-                                                /* JString */Block.__(1, ["world"])
-                                              ],
-                                              /* tuple */[
-                                                "one",
-                                                /* JNumber */Block.__(0, [1.0])
-                                              ]
-                                            ]]));
+                              var json = "{\"hello\":\"world\",\"one\":1}";
+                              var result = Combinators$BsParse.run(JSON$BsParse.obj, json);
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](JSON$BsParse.show(Combinators$BsParse.get_exn(result))), json);
                             }));
                       Jest.test("multiple keys", (function (param) {
-                              var result = Combinators$BsParse.run(JSON$BsParse.obj, "{\n                \"Company name\" : \"Microsoft Corporation\",\n                \"Ticker\"  : \"MSFT\",\n                \"Active\"  : true,\n                \"Price\"   : 30.66,\n                \"Shares outstanding\" : 8\n            }");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[
-                                              /* tuple */[
-                                                "Company name",
-                                                /* JString */Block.__(1, ["Microsoft Corporation"])
-                                              ],
-                                              /* tuple */[
-                                                "Ticker",
-                                                /* JString */Block.__(1, ["MSFT"])
-                                              ],
-                                              /* tuple */[
-                                                "Active",
-                                                /* JBool */Block.__(2, [true])
-                                              ],
-                                              /* tuple */[
-                                                "Price",
-                                                /* JNumber */Block.__(0, [30.66])
-                                              ],
-                                              /* tuple */[
-                                                "Shares outstanding",
-                                                /* JNumber */Block.__(0, [8.0])
-                                              ]
-                                            ]]));
+                              var json = "{\"Company name\":\"Microsoft Corporation\",\"Ticker\":\"MSFT\",\"Active\":true,\"Price\":30.66,\"Shares outstanding\":8}";
+                              var result = Combinators$BsParse.run(JSON$BsParse.obj, json);
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](JSON$BsParse.show(Combinators$BsParse.get_exn(result))), json);
                             }));
                       Jest.test("nexted array", (function (param) {
-                              var result = Combinators$BsParse.run(JSON$BsParse.obj, "{\n                \"obj\": [1, 2]\n            }");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
-                                                "obj",
-                                                /* JArray */Block.__(3, [/* array */[
-                                                      /* JNumber */Block.__(0, [1.0]),
-                                                      /* JNumber */Block.__(0, [2.0])
-                                                    ]])
-                                              ]]]));
+                              var json = "{\"obj\":[1,2]}";
+                              var result = Combinators$BsParse.run(JSON$BsParse.obj, json);
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](JSON$BsParse.show(Combinators$BsParse.get_exn(result))), json);
                             }));
                       Jest.test("nested empty object", (function (param) {
-                              var result = Combinators$BsParse.run(JSON$BsParse.obj, "{\n                \"obj\": {}\n            }");
-                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
-                                                "obj",
-                                                /* JObject */Block.__(4, [/* array */[]])
-                                              ]]]));
+                              var json = "{\"obj\":{}}";
+                              var result = Combinators$BsParse.run(JSON$BsParse.obj, json);
+                              return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](JSON$BsParse.show(Combinators$BsParse.get_exn(result))), json);
                             }));
                       return Jest.test("nested empty object with data", (function (param) {
-                                    var result = Combinators$BsParse.run(JSON$BsParse.obj, "{\n                \"obj\": {\n                    \"hello\": \"world\"\n                }\n            }");
-                                    return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](Combinators$BsParse.get_exn(result)), /* JObject */Block.__(4, [/* array */[/* tuple */[
-                                                      "obj",
-                                                      /* JObject */Block.__(4, [/* array */[/* tuple */[
-                                                              "hello",
-                                                              /* JString */Block.__(1, ["world"])
-                                                            ]]])
-                                                    ]]]));
+                                    var json = "{\"obj\":{\"hello\":\"world\"}}";
+                                    var result = Combinators$BsParse.run(JSON$BsParse.obj, json);
+                                    return Curry._2(Jest.Expect[/* Operators */25][/* = */5], Jest.Expect[/* expect */0](JSON$BsParse.show(Combinators$BsParse.get_exn(result))), json);
                                   }));
                     }));
       }));

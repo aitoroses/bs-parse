@@ -30,3 +30,22 @@ let rec expr = lazy (literal <|> lazy objP(Lazy.force(expr)) <|> lazy arrayP(Laz
 let objectMember = objectMemberP(Lazy.force(expr))
 let obj = objP(Lazy.force(expr))
 let array = arrayP(Lazy.force(expr))
+
+// Show
+let rec show = json => switch json {
+| JUndefined => "undefined";
+| JNull => "null";
+| JNumber(float) => Js.Float.toString(float);
+| JString(string) => "\"" ++ string ++ "\"";
+| JBool(bool) => if (bool) { "true" } else { "false" };
+| JArray(array) => 
+    open! Js.Array2;
+    "[" ++ array->map(show)->joinWith(",") ++ "]";
+| JObject(array) =>
+    open! Js.Array2;
+    let memberShow = ((key, json)) => {
+        let value = show(json);
+        {j|"$key":$value|j}
+    };
+    "{" ++ array->map(memberShow)->joinWith(",") ++ "}"
+};

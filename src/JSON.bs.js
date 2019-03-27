@@ -95,6 +95,38 @@ var array = arrayP(tag$2 === 250 ? expr[0] : (
         tag$2 === 246 ? CamlinternalLazy.force_lazy_block(expr) : expr
       ));
 
+function show(json) {
+  if (typeof json === "number") {
+    if (json === 0) {
+      return "undefined";
+    } else {
+      return "null";
+    }
+  } else {
+    switch (json.tag | 0) {
+      case 0 : 
+          return json[0].toString();
+      case 1 : 
+          return "\"" + (json[0] + "\"");
+      case 2 : 
+          if (json[0]) {
+            return "true";
+          } else {
+            return "false";
+          }
+      case 3 : 
+          return "[" + (json[0].map(show).join(",") + "]");
+      case 4 : 
+          var memberShow = function (param) {
+            var value = show(param[1]);
+            return "\"" + (String(param[0]) + ("\":" + (String(value) + "")));
+          };
+          return "{" + (json[0].map(memberShow).join(",") + "}");
+      
+    }
+  }
+}
+
 export {
   $$undefined ,
   $$null ,
@@ -111,6 +143,7 @@ export {
   objectMember ,
   obj ,
   array ,
+  show ,
   
 }
 /* undefined Not a pure module */
