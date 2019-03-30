@@ -18,10 +18,6 @@ module type Parsers = {
   let regex: string => parser(array(string))
   let sepBy: parser('b) => parser('a) => parser(array('a))
 
-  /* seq(p)(f): Run a parser, then use its result to select a second parser to run in sequence 
-   * for me this one is flatMap
-   */
-  
   let label: string => parser('a) => parser('a)
   let scope: string => parser('a) => parser('a)
 
